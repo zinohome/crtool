@@ -470,6 +470,7 @@ class ChangerequestAdmin(SwiftAdmin):
 
     async def get_create_form(self, request: Request, bulk: bool = False) -> Form:
         c_form = await super().get_create_form(request, bulk)
+        c_form.preventEnterSubmit=True
         if not bulk:
             # 构建主表Create
             formtab = amis.Tabs(tabsMode='strong')
@@ -527,6 +528,7 @@ class ChangerequestAdmin(SwiftAdmin):
 
     async def get_update_form(self, request: Request, bulk: bool = False) -> Form:
         u_form = await super().get_update_form(request, bulk)
+        u_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
             formtab = amis.Tabs(tabsMode='strong')
@@ -653,6 +655,7 @@ class ChangerequestAdmin(SwiftAdmin):
 
     async def get_duplicate_form(self, request: Request, bulk: bool = False) -> Form:
         d_form = await self.get_duplicate_form_inner(request, bulk)
+        d_form.preventEnterSubmit = True
         return d_form
 
     async def get_duplicate_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
@@ -698,6 +701,7 @@ class ChangerequestAdmin(SwiftAdmin):
 
     async def get_review_form(self, request: Request, bulk: bool = False) -> Form:
         r_form = await super().get_update_form(request, bulk)
+        r_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
             formtab = amis.Tabs(tabsMode='strong')
