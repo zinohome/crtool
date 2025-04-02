@@ -115,6 +115,16 @@ class ChangerequestAdmin(SwiftAdmin):
         }
     ]
 
+    readactions = [
+        {
+            "type": "button",
+            "actionType": "cancel",
+            "icon": "fa fa-reply",
+            "label": "取消",
+            "primary": False
+        }
+    ]
+
     reviewactions = [
         {
             "type": "button",
@@ -288,6 +298,43 @@ class ChangerequestAdmin(SwiftAdmin):
                 ),
             )
 
+    async def get_read_action(self, request: Request) -> Optional[Action]:
+        if not self.schema_read:
+            return None
+        if self.action_type == 'Drawer':
+            return ActionType.Drawer(
+                icon="fas fa-eye",
+                tooltip=_("View"),
+                drawer=Drawer(
+                    title=_("View") + " - " + _(self.page_schema.label),
+                    position="right",
+                    showCloseButton=False,
+                    actions=self.readactions,
+                    overlay=False,
+                    closeOnOutside=True,
+                    size=SizeEnum.lg,
+                    resizable=True,
+                    width="900px",
+                    body=await self.get_read_form(request),
+                ),
+            )
+        else:
+            return ActionType.Dialog(
+                icon="fas fa-eye",
+                tooltip=_("View"),
+                dialog=Dialog(
+                    title=_("View") + " - " + _(self.page_schema.label),
+                    position="right",
+                    showCloseButton=False,
+                    actions=self.readactions,
+                    overlay=False,
+                    closeOnOutside=True,
+                    size=SizeEnum.lg,
+                    resizable=True,
+                    width="900px",
+                    body=await self.get_read_form(request),
+                ),
+            )
 
     async def get_update_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
         if not bulk:
