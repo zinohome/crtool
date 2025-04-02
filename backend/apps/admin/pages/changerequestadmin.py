@@ -31,7 +31,7 @@ from apps.admin.models.changerequest import Changerequest
 
 class ChangerequestAdmin(SwiftAdmin):
     group_schema = "Changerequest"
-    page_schema = PageSchema(label='ChangeRequest', page_title='ChangeRequest', icon='fa fa-bolt', sort=96)
+    page_schema = PageSchema(label='ChangeRequest', page_title='ChangeRequest', icon='fa fa-server', sort=96)
     model = Changerequest
     pk_name = 'id'
     list_per_page = 20
@@ -59,11 +59,13 @@ class ChangerequestAdmin(SwiftAdmin):
         {
             "type": "button",
             "actionType": "cancel",
+            "icon": "fa fa-reply",
             "label": "取消",
             "primary": False
         },
         {
             "type": "button",
+            "icon": "fa fa-file",
             "onEvent": {
                 "click": {
                     "actions": [
@@ -88,6 +90,7 @@ class ChangerequestAdmin(SwiftAdmin):
         },
         {
             "type": "button",
+            "icon": "fa fa-arrow-up",
             "onEvent": {
                 "click": {
                     "actions": [
@@ -116,11 +119,13 @@ class ChangerequestAdmin(SwiftAdmin):
         {
             "type": "button",
             "actionType": "cancel",
+            "icon": "fa fa-reply",
             "label": "取消",
             "primary": False
         },
         {
             "type": "button",
+            "icon": "fa fa-arrow-right",
             "onEvent": {
                 "click": {
                     "actions": [
@@ -145,6 +150,7 @@ class ChangerequestAdmin(SwiftAdmin):
         },
         {
             "type": "button",
+            "icon": "fa fa-arrow-left",
             "onEvent": {
                 "click": {
                     "actions": [
@@ -169,6 +175,7 @@ class ChangerequestAdmin(SwiftAdmin):
         },
         {
             "type": "button",
+            "icon": "fa fa-stop-circle",
             "onEvent": {
                 "click": {
                     "actions": [
@@ -414,7 +421,7 @@ class ChangerequestAdmin(SwiftAdmin):
     async def get_read_form(self, request: Request) -> Form:
         r_form = await super().get_read_form(request)
         # 构建主表Read
-        formtab = amis.Tabs(tabsMode='strong')
+        formtab = amis.Tabs(tabsMode='card')
         formtab.tabs = []
         fieldlist = []
         for item in r_form.body:
@@ -473,7 +480,7 @@ class ChangerequestAdmin(SwiftAdmin):
         c_form.preventEnterSubmit=True
         if not bulk:
             # 构建主表Create
-            formtab = amis.Tabs(tabsMode='strong')
+            formtab = amis.Tabs(tabsMode='card')
             formtab.tabs = []
             fieldlist = []
             for item in c_form.body:
@@ -488,17 +495,17 @@ class ChangerequestAdmin(SwiftAdmin):
                 Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
             customer_fld_lst.append(Divider())
             customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-square', body=customer_fld_lst)
+            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
             ssr_fld_lst = []
             ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
             ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
             ssr_fld_lst.append(Divider())
-            ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-square', body=ssr_fld_lst)
+            ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
             proj_fld_lst = []
             proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
             proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
             proj_fld_lst.append(Divider())
-            projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-square', body=proj_fld_lst)
+            projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
             cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
             cr_fld_lst.append(Group(body=[fld_dict["end_date"], fld_dict["begin_date"]]))
@@ -511,13 +518,13 @@ class ChangerequestAdmin(SwiftAdmin):
             cr_fld_lst.append(Group(body=[fld_dict["category"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
-            crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-square', body=cr_fld_lst)
+            crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
             review_fld_lst = []
             review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
             review_fld_lst.append(Divider())
-            reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-square', body=review_fld_lst)
+            reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
             formtab.tabs.append(basictabitem)
             formtab.tabs.append(ssrtabitem)
             formtab.tabs.append(projtabitem)
@@ -531,7 +538,7 @@ class ChangerequestAdmin(SwiftAdmin):
         u_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
-            formtab = amis.Tabs(tabsMode='strong')
+            formtab = amis.Tabs(tabsMode='card')
             formtab.tabs = []
             fieldlist = []
             for item in u_form.body:
@@ -600,7 +607,7 @@ class ChangerequestAdmin(SwiftAdmin):
         )
         if not bulk:
             # 构建主表Create
-            formtab = amis.Tabs(tabsMode='strong')
+            formtab = amis.Tabs(tabsMode='card')
             formtab.tabs = []
             fieldlist = []
             for item in d_form.body:
@@ -704,7 +711,7 @@ class ChangerequestAdmin(SwiftAdmin):
         r_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
-            formtab = amis.Tabs(tabsMode='strong')
+            formtab = amis.Tabs(tabsMode='card')
             formtab.tabs = []
             fieldlist = []
             for item in r_form.body:
@@ -721,7 +728,7 @@ class ChangerequestAdmin(SwiftAdmin):
                 Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
             customer_fld_lst.append(Divider())
             customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-square', body=customer_fld_lst)
+            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-square', className="bg-yellow-50", body=customer_fld_lst)
             ssr_fld_lst = []
             ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
             ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
