@@ -13,6 +13,8 @@ from fastapi_amis_admin.crud import CrudEnum
 from fastapi_amis_admin.crud.base import SchemaFilterT
 from fastapi_amis_admin.crud.parser import TableModelParser
 from fastapi_amis_admin.utils.pydantic import model_fields
+from fastapi_user_auth.auth.models import User
+from fastapi_user_auth.globals import auth
 from pydantic._internal._decorators import mro
 
 from apps.admin.swiftadmin import SwiftAdmin
@@ -220,6 +222,8 @@ class ChangerequestAdmin(SwiftAdmin):
         self.action_type = 'Drawer'
 
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
+        user = await auth.get_current_user(request)
+        log.debug(user)
         if not bulk:
             if self.action_type == 'Drawer':
                 return ActionType.Drawer(
