@@ -52,10 +52,10 @@ class ChangerequestAdmin(SwiftAdmin):
         lambda self: AdminAction(
             admin=self,
             name="review",
-            tooltip="审核",
+            tooltip="审批",
             flags=["item"],
             getter=lambda request: self.get_review_action(request, bulk=False),
-        ),
+        )
     ]
     createactions = [
         {

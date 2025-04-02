@@ -33,7 +33,7 @@ from apps.admin.models.changerequest import Changerequest
 
 class CrReview(SwiftAdmin):
     group_schema = "Changerequest"
-    page_schema = PageSchema(label='CRReview', page_title='CRReview', icon='fa fa-server', sort=95)
+    page_schema = PageSchema(label='CRReview', page_title='CRReview', icon='fa fa-server', sort=91)
     model = Changerequest
     pk_name = 'id'
     list_per_page = 20
@@ -44,18 +44,11 @@ class CrReview(SwiftAdmin):
     admin_action_maker = [
         lambda self: AdminAction(
             admin=self,
-            name="copy",
-            tooltip="复制",
-            flags=["item"],
-            getter=lambda request: self.get_duplicate_action(request, bulk=False),
-        ),
-        lambda self: AdminAction(
-            admin=self,
             name="review",
             tooltip="审核",
             flags=["item"],
             getter=lambda request: self.get_review_action(request, bulk=False),
-        ),
+        )
     ]
     createactions = [
         {
