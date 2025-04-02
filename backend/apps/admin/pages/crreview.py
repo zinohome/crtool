@@ -31,7 +31,7 @@ from utils.log import log as log
 from apps.admin.models.changerequest import Changerequest
 
 
-class ChangerequestReview(SwiftAdmin):
+class CrReview(SwiftAdmin):
     group_schema = "Changerequest"
     page_schema = PageSchema(label='CRReview', page_title='CRReview', icon='fa fa-server', sort=95)
     model = Changerequest

@@ -16,7 +16,8 @@ from fastapi_amis_admin.admin import AdminApp
 from construct.app import App
 from utils.log import log as log
 from apps.admin.pages.changerequestadmin import ChangerequestAdmin
-from apps.admin.pages.changerequestreview import ChangerequestReview
+from apps.admin.pages.crrequest import CrRequest
+from apps.admin.pages.crreview import CrReview
 
 appdef = App()
 
@@ -30,4 +31,5 @@ class Changerequestgroup(admin.AdminApp):
     def __init__(self, app: "AdminApp"):
         super().__init__(app)
         self.register_admin(ChangerequestAdmin)
-        self.register_admin(ChangerequestReview)
+        self.register_admin(CrRequest)
+        self.register_admin(CrReview)
