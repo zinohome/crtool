@@ -12,6 +12,7 @@ from decimal import Decimal
 from fastapi_amis_admin import models, amis
 from typing import Optional, List, TYPE_CHECKING
 
+from fastapi_amis_admin.amis import InputRichText
 from fastapi_amis_admin.models import Field
 from sqlalchemy import func, Column
 from sqlalchemy.dialects.mysql import TEXT
@@ -163,7 +164,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='CR Detail Plan<br>(变更方案)',
                                                     nullable=True,
                                                     index=False,
-                                                    amis_form_item=amis.Textarea(),
+                                                    amis_form_item=InputRichText(),
                                                     amis_table_column = "")
     machine_info: Optional[str] = models.Field(default=None,
                                                     title='*Machine Type/ModelSN/Machine Status<br>(机器型号、序列号、服务状态)',

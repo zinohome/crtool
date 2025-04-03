@@ -481,3 +481,13 @@
 2025-04-02 at 19:19:07 | DEBUG | update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) username='root' password=SecretStr('**********') id=2 nickname='' delete_time=None email=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
 2025-04-02 at 19:19:08 | DEBUG | update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) username='root' password=SecretStr('**********') id=2 nickname='' delete_time=None email=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
 2025-04-02 at 19:19:13 | DEBUG | update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) username='root' password=SecretStr('**********') id=2 nickname='' delete_time=None email=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-02 at 19:24:14 | DEBUG | Check models Starting ...
+2025-04-02 at 19:24:14 | DEBUG | Check models completed ！
+2025-04-02 at 19:24:15 | DEBUG | Regist admin module [ Changerequestgroup ] ...
+2025-04-02 at 19:24:15 | DEBUG | Regist admin module [ AppHome ] ...
+2025-04-02 at 19:24:24 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-02 at 19:26:48 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-03 at 08:45:22 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-03 at 08:45:53 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-03 at 08:45:54 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
+2025-04-03 at 08:45:56 | DEBUG | password=SecretStr('**********') username='root' update_time=datetime.datetime(2025, 3, 26, 14, 48, 58) id=2 nickname='' email=None delete_time=None create_time=datetime.datetime(2025, 3, 26, 14, 48, 58) is_active=True avatar=''
