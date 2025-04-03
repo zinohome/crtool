@@ -14,6 +14,7 @@ from typing import Optional, List, TYPE_CHECKING
 
 from fastapi_amis_admin.amis import InputRichText
 from fastapi_amis_admin.models import Field
+from fastapi_user_auth.auth.models import User
 from sqlalchemy import func, Column
 from sqlalchemy.dialects.mysql import TEXT
 from sqlmodel import Relationship
@@ -21,8 +22,10 @@ from sqlmodelx import SQLModel
 
 from construct.app import App
 from core import i18n as _
+from utils.userselect import UserSelect
 
 appdef = App()
+userselect = UserSelect()
 class SwiftSQLModel(SQLModel):
     class Config:
         use_enum_values = True
@@ -96,7 +99,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*SSR Contact Name<br>(负责SSR 名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.Select(options=userselect.SSR, labelField='name', valueField='name'),
                                                     amis_table_column = "")
     ssr_phone: Optional[str] = models.Field(default=None,
                                                     title='*Phone/MP',
@@ -108,13 +111,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Support TSG ID<br>(技术支持人员名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.Select(options=userselect.TSG, labelField='name', valueField='name'),
                                                     amis_table_column = "")
     local_sdm: Optional[str] = models.Field(default=None,
                                                     title='*Local SDM<br>(SSR经理)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.Select(options=userselect.SDM, labelField='name', valueField='name'),
                                                     amis_table_column = "")
     proj_code: Optional[str] = models.Field(default=None,
                                                     title='*Project Code/CSP WO<br>(TSG timereport Input使用)',
@@ -138,7 +141,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Onsite Engineer<br>(维修SSR名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.Select(options=userselect.SSR, labelField='name', valueField='name'),
                                                     amis_table_column = "")
     begin_date: Optional[str] = models.Field(default_factory= datetime.now,
                                                     title='Begin Date<br>(维护开始时间)',

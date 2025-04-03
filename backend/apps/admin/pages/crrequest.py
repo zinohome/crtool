@@ -215,8 +215,6 @@ class CrRequest(SwiftAdmin):
         self.action_type = 'Drawer'
 
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
-        user = await auth.get_current_user(request)
-        log.debug(user)
         if not bulk:
             if self.action_type == 'Drawer':
                 return ActionType.Drawer(
@@ -522,6 +520,7 @@ class CrRequest(SwiftAdmin):
     async def get_create_form(self, request: Request, bulk: bool = False) -> Form:
         c_form = await super().get_create_form(request, bulk)
         c_form.preventEnterSubmit=True
+        user = await auth.get_current_user(request)
         if not bulk:
             # 构建主表Create
             formtab = amis.Tabs(tabsMode='card')
@@ -541,6 +540,7 @@ class CrRequest(SwiftAdmin):
             customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
             basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
             ssr_fld_lst = []
+            fld_dict["ssr"].value = user.username
             ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
             ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
             ssr_fld_lst.append(Divider())
@@ -551,6 +551,7 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
+            fld_dict["onsite_engineer"].value = user.username
             cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
             cr_fld_lst.append(Group(body=[fld_dict["end_date"], fld_dict["begin_date"]]))
             proj_fld_lst.append(Divider())
