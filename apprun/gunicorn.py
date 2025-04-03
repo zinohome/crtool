@@ -3,17 +3,17 @@
 
 bind = '0.0.0.0:8843'
 backlog = 512
-chdir = '/opt/Capricornus'
+chdir = '/Users/zhangjun/PycharmProjects/crtool/'
 timeout = 300
 worker_class = 'uvicorn.workers.UvicornWorker'
 workers = 2
 threads = 5
 loglevel = 'info'
 access_log_format = '%(t)s %(p)s %(h)s "%(r)s" %(s)s %(L)s %(b)s %(f)s" "%(a)s"'
-accesslog = "/opt/Capricornus/log/gunicorn_access.log"
-errorlog = "/opt/Capricornus/log/gunicorn_error.log"
-keyfile = "/opt/Capricornus/cert/key.pem"
-certfile = "/opt/Capricornus/cert/cert.pem"
+accesslog = "/Users/zhangjun/PycharmProjects/crtool/backend/log/gunicorn_access.log"
+errorlog = "/Users/zhangjun/PycharmProjects/crtool/backend/log/gunicorn_error.log"
+keyfile = "/Users/zhangjun/PycharmProjects/crtool/cert/key.pem"
+certfile = "/Users/zhangjun/PycharmProjects/crtool/cert/cert.pem"
 """
 h          remote address
 l          '-'
