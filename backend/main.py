@@ -5,6 +5,7 @@
 # @Author  : ZhangJun
 # @FileName: main.py
 
+import os
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 from starlette.requests import Request
@@ -67,7 +68,10 @@ app.add_middleware(
 )
 
 # 2. 配置静态资源目录
-app.mount("/static", StaticFiles(directory="apps/static"), name="static")
+print("==============")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(os.path.join(BASE_DIR, 'backend/apps/static'))
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, 'backend/apps/static')), name="static")
 
 # 3.配置 Swagger UI CDN
 from fastapi.openapi.docs import get_swagger_ui_html, get_swagger_ui_oauth2_redirect_html, get_redoc_html
