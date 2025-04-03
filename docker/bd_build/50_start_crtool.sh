@@ -7,4 +7,4 @@ else
     cp /opt/crtool/apprun/gunicorn_default.py /opt/crtool/config/gunicorn.py
 fi
 cd /opt/crtool/backend && \
-nohup /opt/crtool/backend/venv/bin/gunicorn -c /opt/crtool/apprun/gunicorn.py main:app >> /tmp/crtool.log 2>&1 &
+nohup /opt/crtool/venv/bin/gunicorn -c /opt/crtool/apprun/gunicorn.py main:app >> /tmp/crtool.log 2>&1 &

@@ -68,9 +68,7 @@ app.add_middleware(
 )
 
 # 2. 配置静态资源目录
-print("==============")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(os.path.join(BASE_DIR, 'backend/apps/static'))
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, 'backend/apps/static')), name="static")
 
 # 3.配置 Swagger UI CDN

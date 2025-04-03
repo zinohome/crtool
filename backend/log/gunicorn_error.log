@@ -71,3 +71,27 @@ RuntimeError: Directory 'apps/static' does not exist
 [2025-04-03 16:14:05 +0800] [74354] [ERROR] Worker (pid:74356) was sent SIGTERM!
 [2025-04-03 16:14:05 +0800] [74354] [ERROR] Shutting down: Master
 [2025-04-03 16:14:05 +0800] [74354] [ERROR] Reason: Worker failed to boot.
+[2025-04-03 16:36:42 +0800] [75000] [INFO] Starting gunicorn 23.0.0
+[2025-04-03 16:36:42 +0800] [75000] [INFO] Listening at: https://0.0.0.0:8843 (75000)
+[2025-04-03 16:36:42 +0800] [75000] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2025-04-03 16:36:42 +0800] [75001] [INFO] Booting worker with pid: 75001
+[2025-04-03 16:36:42 +0800] [75002] [INFO] Booting worker with pid: 75002
+[2025-04-03 16:36:47 +0800] [75002] [INFO] Started server process [75002]
+[2025-04-03 16:36:47 +0800] [75001] [INFO] Started server process [75001]
+[2025-04-03 16:36:47 +0800] [75002] [INFO] Waiting for application startup.
+[2025-04-03 16:36:47 +0800] [75001] [INFO] Waiting for application startup.
+[2025-04-03 16:36:49 +0800] [75002] [INFO] Application startup complete.
+[2025-04-03 16:36:49 +0800] [75001] [INFO] Application startup complete.
+[2025-04-03 16:37:38 +0800] [75000] [INFO] Handling signal: int
+[2025-04-03 16:37:38 +0800] [75001] [INFO] Shutting down
+[2025-04-03 16:37:38 +0800] [75001] [INFO] Error while closing socket [Errno 9] Bad file descriptor
+[2025-04-03 16:37:38 +0800] [75002] [INFO] Shutting down
+[2025-04-03 16:37:38 +0800] [75002] [INFO] Error while closing socket [Errno 9] Bad file descriptor
+[2025-04-03 16:37:38 +0800] [75001] [INFO] Waiting for connections to close. (CTRL+C to force quit)
+[2025-04-03 16:37:38 +0800] [75002] [INFO] Waiting for application shutdown.
+[2025-04-03 16:37:38 +0800] [75002] [INFO] Application shutdown complete.
+[2025-04-03 16:37:38 +0800] [75002] [INFO] Finished server process [75002]
+[2025-04-03 16:37:38 +0800] [75000] [ERROR] Worker (pid:75002) was sent SIGINT!
+[2025-04-03 16:37:38 +0800] [75001] [INFO] Finished server process [75001]
+[2025-04-03 16:37:38 +0800] [75000] [ERROR] Worker (pid:75001) was sent SIGINT!
+[2025-04-03 16:37:38 +0800] [75000] [INFO] Shutting down: Master

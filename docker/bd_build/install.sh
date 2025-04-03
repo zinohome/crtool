@@ -16,10 +16,10 @@ mkcert -install && \
 mkdir -p /opt/crtool/backend/log && \
 mkdir -p /opt/crtool/cert && \
 mkcert -cert-file /opt/crtool/cert/cert.pem -key-file /opt/crtool/cert/key.pem ibmtls.com crtool.ibmtls.com localhost 127.0.0.1 ::1 && \
-cd /opt/crtool/backend && \
+cd /opt/crtool && \
 virtualenv venv && \
 . venv/bin/activate && \
-pip install -r ../requirements.txt && \
+pip install -r requirements.txt && \
 cp /opt/crtool/docker/bd_build/wait-for /usr/bin/wait-for && chmod 755 /usr/bin/wait-for && \
 ls -l /opt/crtool/docker/bd_build/ && \
 cp /opt/crtool/docker/bd_build/50_start_h.sh /etc/my_init.d/50_start_crtool.sh &&
