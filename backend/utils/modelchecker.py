@@ -10,6 +10,7 @@ import traceback
 import shutil
 import fastapi_amis_admin.admin.admin as file_admin
 import fastapi_amis_admin.crud._sqlalchemy as file_sqlalchemy
+import fastapi_user_auth.admin.admin as file_auth_admin
 import fastapi_user_auth.admin.site as file_site
 import fastapi_user_auth.auth.models as file_models
 
@@ -43,18 +44,31 @@ class Modelchecker():
         updatepath = os.path.abspath(os.path.join(apppath, 'construct/update'))
         log.debug("Check models Starting ...")
         try:
-            for tfile in (file_admin, file_sqlalchemy, file_site, file_models):
+            for tfile in (file_admin, file_sqlalchemy, file_auth_admin, file_site, file_models):
                 with open(tfile.__file__, "r") as rfile:
                     fline = rfile.readline()[0:12]
+                    #log.debug(tfile.__name__.split('.'))
+                    #log.debug(tfile.__name__.split('.')[0])
+                    #log.debug(tfile.__name__.split('.')[-1])
                     if fline != "#  @Software":
                         match tfile.__name__.split('.')[-1]:
                             case "admin":
-                                if os.path.exists(
+                                if tfile.__name__.split('.')[0] == 'fastapi_amis_admin':
+                                    if os.path.exists(
                                         os.path.abspath(os.path.join(updatepath, 'fastapi_amis_admin/admin/admin.py'))):
-                                    log.debug("Check model: %s ..." %tfile.__file__)
-                                    shutil.copy(
-                                        os.path.abspath(os.path.join(updatepath, 'fastapi_amis_admin/admin/admin.py')),
-                                        tfile.__file__)
+                                        log.debug("Check model: %s ..." % tfile.__file__)
+                                        shutil.copy(
+                                            os.path.abspath(os.path.join(updatepath, 'fastapi_amis_admin/admin/admin.py')),
+                                            tfile.__file__)
+                                if tfile.__name__.split('.')[0] == 'fastapi_user_auth':
+                                    if os.path.exists(
+                                            os.path.abspath(
+                                                os.path.join(updatepath, 'fastapi_user_auth/admin/admin.py'))):
+                                        log.debug("Check model: %s ..." % tfile.__file__)
+                                        shutil.copy(
+                                            os.path.abspath(
+                                                os.path.join(updatepath, 'fastapi_user_auth/admin/admin.py')),
+                                            tfile.__file__)
                             case "_sqlalchemy":
                                 if os.path.exists(
                                         os.path.abspath(os.path.join(updatepath, 'fastapi_amis_admin/crud/_sqlalchemy.py'))):

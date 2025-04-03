@@ -16,6 +16,7 @@ from fastapi_amis_admin.utils.pydantic import model_fields
 from fastapi_user_auth.auth.models import User
 from fastapi_user_auth.globals import auth
 from pydantic._internal._decorators import mro
+from sqlalchemy import Select, or_, and_
 
 from apps.admin.swiftadmin import SwiftAdmin
 from core.globals import site
@@ -213,6 +214,33 @@ class CrRequest(SwiftAdmin):
         self.schema_read = None
         # 设置form弹出类型  Drawer | Dialog
         self.action_type = 'Drawer'
+
+    async def get_select(self, request: Request) -> Select:
+        #user = await auth.get_current_user(request)
+        #log.debug(user)
+        #log.debug(request.user)
+        stmt = await super().get_select(request)
+        '''
+        log.debug(stmt)
+        log.debug(stmt.where(Changerequest.ssr == request.user.username))
+        log.debug(stmt.where(or_(
+            Changerequest.ssr == request.user.username,and_(
+                Changerequest.local_sdm == request.user.username,
+                Changerequest.tsg_rvew_rslt != 'Draft'
+            ))))
+        '''
+        return stmt.where(or_(
+            Changerequest.ssr == request.user.username,
+            and_(
+                Changerequest.local_sdm == request.user.username,
+                Changerequest.tsg_rvew_rslt != 'Draft'
+            ),
+            and_(
+                Changerequest.onsite_engineer == request.user.username,
+                Changerequest.tsg_rvew_rslt != 'Draft'
+            )
+        )
+        )
 
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
         if not bulk:
