@@ -20,4 +20,5 @@ Tornado>=4.0.0,<5.0.0
 opentracing_instrumentation>=3.3.1
 Starlette-OpenTracing>=0.1.0
 nest_asyncio>=1.6.0
+cryptography>=44.0.2
 
