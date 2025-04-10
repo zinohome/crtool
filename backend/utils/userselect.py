@@ -33,7 +33,7 @@ class UserSelect(object):
         self.SSR = None
         self.SDM = None
         self.TSG = None
-        self.TSGManager = None
+        self.TSGLeader = None
         basepath = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
         apppath = os.path.abspath(os.path.join(basepath, os.pardir))
         jsonpath = os.path.abspath(os.path.join(apppath, 'userselect.json'))
@@ -44,7 +44,7 @@ class UserSelect(object):
             self.SSR = user_obj['SSR']
             self.SDM = user_obj['SDM']
             self.TSG = user_obj['TSG']
-            self.TSGManager = user_obj['TSGManager']
+            self.TSGLeader = user_obj['TSGLeader']
         except Exception as exp:
             print('Exception at UserSelect.__init__() %s ' % exp)
             traceback.print_exc()
@@ -55,5 +55,5 @@ if __name__ == '__main__':
     log.debug(userselect.SSR)
     log.debug(userselect.SDM)
     log.debug(userselect.TSG)
-    log.debug(userselect.TSGManager)
+    log.debug(userselect.TSGLeader)
 
