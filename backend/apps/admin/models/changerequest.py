@@ -12,10 +12,8 @@ from decimal import Decimal
 from fastapi_amis_admin import models, amis
 from typing import Optional, List, TYPE_CHECKING
 
-from fastapi_amis_admin.amis import InputRichText
 from fastapi_amis_admin.models import Field
-from fastapi_user_auth.auth.models import User
-from sqlalchemy import func, Column
+from sqlalchemy import Column, func
 from sqlalchemy.dialects.mysql import TEXT
 from sqlmodel import Relationship
 from sqlmodelx import SQLModel
@@ -131,11 +129,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     index=False,
                                                     amis_form_item = "",
                                                     amis_table_column = "")
-    busnss_jstfction: Optional[str] = models.Field(default=None,
+    busnss_jstfction: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Business Justification<br>(合同中对TSG现场支持的约定以及合理合规的商业理由)',
-                                                    nullable=False,
-                                                    index=False,
                                                     amis_form_item=amis.Textarea(),
+                                                    amis_table_column = "")
+    busnss_jstfction_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
+                                                    title='*Business Justification<br>附件',
+                                                    amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = "")
     onsite_engineer: Optional[str] = models.Field(default=None,
                                                     title='*Onsite Engineer<br>(维修SSR名字)',
@@ -157,23 +157,27 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     sa_column_kwargs={"server_default": func.now()},
                                                     amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD", minDate="$begin_date"),
                                                     amis_table_column = "")
-    cr_activity_brief: Optional[str] = models.Field(default=None,
+    cr_activity_brief: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*CR activity Brief<br>(变更描述)',
-                                                    nullable=False,
-                                                    index=False,
                                                     amis_form_item=amis.Textarea(),
                                                     amis_table_column = "")
-    cr_detail_plan: Optional[str] = models.Field(default=None,
+    cr_detail_plan: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='CR Detail Plan<br>(变更方案)',
-                                                    nullable=True,
-                                                    index=False,
-                                                    amis_form_item=InputRichText(),
+                                                    amis_form_item=amis.Textarea(),
+                                                    amis_table_column = "")
+    cr_detail_plan_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
+                                                    title='CR Detail Plan<br>附件',
+                                                    amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = "")
     machine_info: Optional[str] = models.Field(default=None,
                                                     title='*Machine Type/ModelSN/Machine Status<br>(机器型号、序列号、服务状态)',
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item = "",
+                                                    amis_table_column = "")
+    machine_info_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
+                                                    title='Machine Type/ModelSN/Machine Status<br>附件',
+                                                    amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = "")
     version: Optional[str] = models.Field(default=None,
                                                     title='Microcode/Patch Level<br>(微码版本/补丁版本)',
@@ -199,10 +203,8 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     index=False,
                                                     amis_form_item=amis.Select(options=appdef.AppVardicts['category']['value'], labelField='label', valueField='value', multiple=True),
                                                     amis_table_column = "")
-    prblm_dscrption: Optional[str] = models.Field(default=None,
+    prblm_dscrption: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Problem Description and  Help needed<br>(故障现象以及所需帮助)',
-                                                    nullable=False,
-                                                    index=False,
                                                     amis_form_item=amis.Textarea(),
                                                     amis_table_column = "")
     tsg_rvew_rslt: Optional[str] = models.Field(default="Draft",
