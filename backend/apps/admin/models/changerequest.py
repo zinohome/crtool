@@ -115,7 +115,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Local SDM<br>(SSR经理)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.Select(creatable=True, source='/crtool/get_sdm_list', labelField='label', valueField='value'),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     proj_code: Optional[str] = models.Field(default=None,
                                                     title='*Project Code/CSP WO<br>(TSG timereport Input使用)',
