@@ -7,10 +7,13 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: SwiftApp
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from fastapi._compat import ModelField
 from fastapi_amis_admin.admin import AdminAction
 from fastapi_amis_admin.crud import CrudEnum
-from fastapi_amis_admin.crud.base import SchemaFilterT
+from fastapi_amis_admin.crud.base import SchemaFilterT, SchemaUpdateT
 from fastapi_amis_admin.crud.parser import TableModelParser
 from fastapi_amis_admin.utils.pydantic import model_fields
 from fastapi_user_auth.auth.models import User
@@ -908,3 +911,26 @@ class CrReview(SwiftAdmin):
                 )
         else:
             return None
+
+    async def on_create_pre(
+            self,
+            request: Request,
+            obj: SchemaUpdateT,
+            item_id: Union[List[str], List[int]],
+            **kwargs,
+    ) -> Dict[str, Any]:
+        data = await super().on_update_pre(request, obj, item_id)
+        data['create_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        return data
+
+    async def on_update_pre(
+            self,
+            request: Request,
+            obj: SchemaUpdateT,
+            item_id: Union[List[str], List[int]],
+            **kwargs,
+    ) -> Dict[str, Any]:
+        data = await super().on_update_pre(request, obj, item_id)
+        data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        return data

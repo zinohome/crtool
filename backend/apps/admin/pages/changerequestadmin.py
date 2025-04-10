@@ -7,15 +7,19 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: SwiftApp
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from fastapi._compat import ModelField
 from fastapi_amis_admin.admin import AdminAction
 from fastapi_amis_admin.crud import CrudEnum
-from fastapi_amis_admin.crud.base import SchemaFilterT
+from fastapi_amis_admin.crud.base import SchemaFilterT, SchemaUpdateT
 from fastapi_amis_admin.crud.parser import TableModelParser
 from fastapi_amis_admin.utils.pydantic import model_fields
 from fastapi_user_auth.auth.models import User
 from fastapi_user_auth.globals import auth
 from pydantic._internal._decorators import mro
+from sqlalchemy import Select, or_, and_, desc
 
 from apps.admin.swiftadmin import SwiftAdmin
 from core.globals import site
@@ -37,7 +41,7 @@ class ChangerequestAdmin(SwiftAdmin):
     model = Changerequest
     pk_name = 'id'
     list_per_page = 20
-    list_display = [Changerequest.customer_name,Changerequest.cr_activity_brief,Changerequest.ssr,Changerequest.sngl_pnt_sys,Changerequest.support_tsg_id,Changerequest.begin_date,Changerequest.end_date,Changerequest.tsg_rvew_rslt]
+    list_display = [Changerequest.id,Changerequest.customer_name,Changerequest.cr_activity_brief,Changerequest.ssr,Changerequest.sngl_pnt_sys,Changerequest.support_tsg_id,Changerequest.begin_date,Changerequest.end_date,Changerequest.tsg_rvew_rslt]
     search_fields = []
     parent_class = None
     tabsMode = TabsModeEnum.card
@@ -220,7 +224,12 @@ class ChangerequestAdmin(SwiftAdmin):
         self.schema_read = None
         # 设置form弹出类型  Drawer | Dialog
         self.action_type = 'Drawer'
-
+    async def get_select(self, request: Request) -> Select:
+        #user = await auth.get_current_user(request)
+        #log.debug(user)
+        #log.debug(request.user)
+        stmt = await super().get_select(request)
+        return stmt.order_by(desc(Changerequest.update_time))
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
         if not bulk:
             if self.action_type == 'Drawer':
@@ -908,3 +917,25 @@ class ChangerequestAdmin(SwiftAdmin):
                 )
         else:
             return None
+    async def on_create_pre(
+            self,
+            request: Request,
+            obj: SchemaUpdateT,
+            item_id: Union[List[str], List[int]],
+            **kwargs,
+    ) -> Dict[str, Any]:
+        data = await super().on_update_pre(request, obj, item_id)
+        data['create_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        return data
+
+    async def on_update_pre(
+            self,
+            request: Request,
+            obj: SchemaUpdateT,
+            item_id: Union[List[str], List[int]],
+            **kwargs,
+    ) -> Dict[str, Any]:
+        data = await super().on_update_pre(request, obj, item_id)
+        data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        return data
