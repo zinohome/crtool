@@ -2656,7 +2656,6 @@
 ],
   "TSG": [
     {
-        "Role": "TSG",
         "id": "duxincun@cn.ibm.com",
         "nickname": "Xin Cun Du",
         "email": "duxincun@cn.ibm.com",
@@ -2664,7 +2663,6 @@
         "SDM": "Qia Wang"
     },
     {
-        "Role": "TSG",
         "id": "luogang@cn.ibm.com",
         "nickname": "Gang Luo",
         "email": "luogang@cn.ibm.com",
@@ -2672,7 +2670,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "chenxz@cn.ibm.com",
         "nickname": "Xu Zhang Chen",
         "email": "chenxz@cn.ibm.com",
@@ -2680,7 +2677,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "chenkan@cn.ibm.com",
         "nickname": "Kan Chen",
         "email": "chenkan@cn.ibm.com",
@@ -2688,7 +2684,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "xdkong@cn.ibm.com",
         "nickname": "Xiang Dong Kong",
         "email": "xdkong@cn.ibm.com",
@@ -2696,7 +2691,6 @@
         "SDM": "Cong Lv"
     },
     {
-        "Role": "TSG",
         "id": "nickchen@cn.ibm.com",
         "nickname": "Ci Qian Chen",
         "email": "nickchen@cn.ibm.com",
@@ -2704,7 +2698,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "wuju@cn.ibm.com",
         "nickname": "Ju Wu",
         "email": "wuju@cn.ibm.com",
@@ -2712,7 +2705,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "yangq@cn.ibm.com",
         "nickname": "Qiang Yang",
         "email": "yangq@cn.ibm.com",
@@ -2720,7 +2712,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "dingtais@cn.ibm.com",
         "nickname": "Tai Shun Ding",
         "email": "dingtais@cn.ibm.com",
@@ -2728,7 +2719,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "minhan@cn.ibm.com",
         "nickname": "Han Min",
         "email": "minhan@cn.ibm.com",
@@ -2736,7 +2726,6 @@
         "SDM": "Jing Xu"
     },
     {
-        "Role": "TSG",
         "id": "luxuhui@cn.ibm.com",
         "nickname": "Xu Hui Lu",
         "email": "luxuhui@cn.ibm.com",
@@ -2744,7 +2733,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "zhangzx@cn.ibm.com",
         "nickname": "Zhao Xu Zhang",
         "email": "zhangzx@cn.ibm.com",
@@ -2752,7 +2740,6 @@
         "SDM": "Zeng Jie Yan"
     },
     {
-        "Role": "TSG",
         "id": "chenzhu@cn.ibm.com",
         "nickname": "Chen Zhu",
         "email": "chenzhu@cn.ibm.com",
@@ -2760,7 +2747,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSG",
         "id": "xubo@cn.ibm.com",
         "nickname": "Bo Xu",
         "email": "xubo@cn.ibm.com",
@@ -2776,7 +2762,6 @@
   ],
   "TSGLeader": [
     {
-        "Role": "TSGLeader",
         "id": "yangq@cn.ibm.com",
         "nickname": "Qiang Yang",
         "email": "yangq@cn.ibm.com",
@@ -2784,7 +2769,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSGLeader",
         "id": "zhaoz@cn.ibm.com",
         "nickname": "Zheng Zhao",
         "email": "zhaoz@cn.ibm.com",
@@ -2792,7 +2776,6 @@
         "SDM": "Jian Ren"
     },
     {
-        "Role": "TSGLeader",
         "id": "renjian@cn.ibm.com",
         "nickname": "Jian Ren",
         "email": "renjian@cn.ibm.com",
