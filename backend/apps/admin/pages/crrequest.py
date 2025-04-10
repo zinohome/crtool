@@ -19,7 +19,7 @@ from fastapi_amis_admin.utils.pydantic import model_fields
 from fastapi_user_auth.auth.models import User
 from fastapi_user_auth.globals import auth
 from pydantic._internal._decorators import mro
-from sqlalchemy import Select, or_, and_
+from sqlalchemy import Select, or_, and_, desc
 
 from apps.admin.swiftadmin import SwiftAdmin
 from core.globals import site
@@ -244,7 +244,7 @@ class CrRequest(SwiftAdmin):
                 Changerequest.tsg_rvew_rslt != 'Draft'
             )
         )
-        )
+        ).order_by(desc(Changerequest.update_time))
 
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
         if not bulk:
