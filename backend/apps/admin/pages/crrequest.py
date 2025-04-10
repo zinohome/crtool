@@ -520,6 +520,7 @@ class CrRequest(SwiftAdmin):
         proj_fld_lst = []
         proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
         proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+        proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
         proj_fld_lst.append(Divider())
         projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
         cr_fld_lst = []
@@ -528,7 +529,9 @@ class CrRequest(SwiftAdmin):
         proj_fld_lst.append(Divider())
         cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
         cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+        cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
         cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+        cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
         cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
         cr_fld_lst.append(Divider())
         cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -580,16 +583,18 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst = []
             proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
             proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
-            fld_dict["onsite_engineer"].value = user.username
             cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
             cr_fld_lst.append(Group(body=[fld_dict["end_date"], fld_dict["begin_date"]]))
             proj_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -639,6 +644,7 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst = []
             proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
             proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
@@ -647,7 +653,9 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -708,6 +716,7 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst = []
             proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
             proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
@@ -716,7 +725,9 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -814,6 +825,7 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst = []
             proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
             proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
@@ -822,7 +834,9 @@ class CrRequest(SwiftAdmin):
             proj_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
             cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["category"]]))
