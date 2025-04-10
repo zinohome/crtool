@@ -98,7 +98,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item = amis.Select(options=userselect.SSR, labelField='name', valueField='name'),
-                                                    amis_table_column = amis.TableColumn(toggled=True))
+                                                    amis_table_column = amis.TableColumn(toggled=False))
     ssr_phone: Optional[str] = models.Field(default=None,
                                                     title='*Phone/MP',
                                                     nullable=False,
@@ -110,13 +110,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item = amis.Select(options=userselect.TSG, labelField='name', valueField='name'),
-                                                    amis_table_column = amis.TableColumn(toggled=True))
+                                                    amis_table_column = amis.TableColumn(toggled=False))
     local_sdm: Optional[str] = models.Field(default=None,
                                                     title='*Local SDM<br>(SSR经理)',
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item = amis.Select(options=userselect.SDM, labelField='name', valueField='name'),
-                                                    amis_table_column = amis.TableColumn(toggled=True))
+                                                    amis_table_column = amis.TableColumn(toggled=False))
     proj_code: Optional[str] = models.Field(default=None,
                                                     title='*Project Code/CSP WO<br>(TSG timereport Input使用)',
                                                     nullable=False,
@@ -132,7 +132,7 @@ class Changerequest(SwiftSQLModel, table=True):
     busnss_jstfction: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Business Justification<br>(合同中对TSG现场支持的约定以及合理合规的商业理由)',
                                                     amis_form_item=amis.Textarea(),
-                                                    amis_table_column = amis.TableColumn(toggled=True))
+                                                    amis_table_column = amis.TableColumn(toggled=False))
     busnss_jstfction_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='*Business Justification<br>附件',
                                                     amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
@@ -156,7 +156,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     index=False,
                                                     sa_column_kwargs={"server_default": func.now()},
                                                     amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD", minDate="$begin_date"),
-                                                    amis_table_column = amis.TableColumn(toggled=True))
+                                                    amis_table_column = amis.TableColumn(toggled=False))
     cr_activity_brief: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*CR activity Brief<br>(变更描述)',
                                                     amis_form_item=amis.Textarea(),
@@ -212,7 +212,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item=amis.Select(options=appdef.AppVardicts['tsg_rvew_rslt']['value'], labelField='label', valueField='value',disabled=True),
-                                                    amis_table_column = amis.TableColumn(toggled=False))
+                                                    amis_table_column = amis.TableColumn(toggled=True))
     tsg_onsite: Optional[str] = models.Field(default="TBD",
                                                     title='TSG On Site Needed',
                                                     nullable=False,
