@@ -940,7 +940,7 @@ class CrRequest(SwiftAdmin):
             item_id: Union[List[str], List[int]],
             **kwargs,
     ) -> Dict[str, Any]:
-        data = await super().on_update_pre(request, obj, item_id)
+        data = await super().on_create_pre(request, obj)
         data['create_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
         data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
         return data

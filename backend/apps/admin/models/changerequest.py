@@ -134,7 +134,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     amis_form_item=amis.Textarea(),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     busnss_jstfction_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
-                                                    title='*Business Justification<br>附件',
+                                                    title='Business Justification<br>附件',
                                                     amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     onsite_engineer: Optional[str] = models.Field(default=None,
