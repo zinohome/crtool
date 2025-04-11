@@ -922,7 +922,6 @@ class ChangerequestAdmin(SwiftAdmin):
             self,
             request: Request,
             obj: SchemaUpdateT,
-            item_id: Union[List[str], List[int]],
             **kwargs,
     ) -> Dict[str, Any]:
         data = await super().on_create_pre(request, obj)

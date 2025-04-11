@@ -2752,12 +2752,22 @@
         "email": "xubo@cn.ibm.com",
         "MobilePhone": "13808852622",
         "SDM": "Wen Bin Fu"
+    },
+    {
+        "id": "Jun.Zhang1@.ibm.com",
+        "nickname": "Zhang Jun",
+        "email": "Jun.Zhang1@ibm.com",
+        "MobilePhone": "13583285152",
+        "SDM": "Wen Bin Fu"
     }
 ],
   "SDM": [
     {
-      "name": "Wang Qia",
-      "mail": "Jun.Zhang1@ibm.com"
+        "id": "qiawang@cn.ibm.com",
+        "nickname": "Wang Qia",
+        "email": "qiawang@cn.ibm.com",
+        "MobilePhone": "13801221041",
+        "SDM": ""
     }
   ],
   "TSGLeader": [

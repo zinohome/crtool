@@ -31,9 +31,14 @@ def singleton(cls):
 class UserSelect(object):
     def __init__(self):
         self.SSR = None
+        self.ssr_dict = None
         self.SDM = None
+        self.sdm_dict = None
         self.TSG = None
+        self.tsg_dict = None
         self.TSGLeader = None
+        self.leader_dict = None
+        self.leader_emails_str = None
         basepath = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
         apppath = os.path.abspath(os.path.join(basepath, os.pardir))
         jsonpath = os.path.abspath(os.path.join(apppath, 'userselect.json'))
@@ -42,13 +47,24 @@ class UserSelect(object):
                 content = app_file.read()
             user_obj = json.loads(content)
             self.SSR = user_obj['SSR']
+            self.ssr_dict = {ssr["id"]: ssr for ssr in self.SSR}
             self.SDM = user_obj['SDM']
+            self.sdm_dict = {sdm["id"]: sdm for sdm in self.SDM}
             self.TSG = user_obj['TSG']
+            self.tsg_dict = {tsg["id"]: tsg for tsg in self.TSG}
             self.TSGLeader = user_obj['TSGLeader']
+            self.leader_dict = {leader["id"]: leader for leader in self.TSGLeader}
+            self.leader_emails_str = ", ".join([leader["email"] for leader in self.TSGLeader])
         except Exception as exp:
             print('Exception at UserSelect.__init__() %s ' % exp)
             traceback.print_exc()
 
+    def find_tsg_email_by_id(self, target_id):
+        leader_info = self.tsg_dict.get(target_id)
+        if leader_info:
+            return leader_info["email"]
+        else:
+            return "yangq@cn.ibm.com"
 
 if __name__ == '__main__':
     userselect = UserSelect()
@@ -56,4 +72,10 @@ if __name__ == '__main__':
     log.debug(userselect.SDM)
     log.debug(userselect.TSG)
     log.debug(userselect.TSGLeader)
+    log.debug(userselect.ssr_dict)
+    log.debug(userselect.sdm_dict)
+    log.debug(userselect.tsg_dict)
+    log.debug(userselect.leader_dict)
+    log.debug(userselect.leader_emails_str)
+    log.debug(userselect.find_tsg_email_by_id('duxincun@cn.ibm.com'))
 
