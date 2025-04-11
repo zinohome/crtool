@@ -547,6 +547,7 @@ class CrRequest(SwiftAdmin):
         review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
         review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
         review_fld_lst.append(Divider())
+        review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
         reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
         formtab.tabs.append(basictabitem)
         formtab.tabs.append(ssrtabitem)
@@ -610,6 +611,7 @@ class CrRequest(SwiftAdmin):
             review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
             review_fld_lst.append(Divider())
+            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
             reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
             formtab.tabs.append(basictabitem)
             formtab.tabs.append(ssrtabitem)
@@ -671,6 +673,7 @@ class CrRequest(SwiftAdmin):
             review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
             review_fld_lst.append(Divider())
+            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
             reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
             formtab.tabs.append(basictabitem)
             formtab.tabs.append(ssrtabitem)
@@ -743,6 +746,7 @@ class CrRequest(SwiftAdmin):
             review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
             review_fld_lst.append(Divider())
+            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
             reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
             formtab.tabs.append(basictabitem)
             formtab.tabs.append(ssrtabitem)
@@ -852,6 +856,7 @@ class CrRequest(SwiftAdmin):
             review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
             review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
             review_fld_lst.append(Divider())
+            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
             reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
             formtab.tabs.append(basictabitem)
             formtab.tabs.append(ssrtabitem)
@@ -957,6 +962,12 @@ class CrRequest(SwiftAdmin):
     ) -> Dict[str, Any]:
         data = await super().on_update_pre(request, obj, item_id)
         data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        if data['tsg_rvew_rslt'].strip() == 'Approved' or data['tsg_rvew_rslt'].strip() == 'Returned' or data['tsg_rvew_rslt'].strip() == 'Completed':
+            addstr = f'{datetime.now().astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M")}: User {request.user.username} reviewed, action: {data["tsg_rvew_rslt"]} '
+            if data['review_history'] is None or len(data['review_history'].strip()) == 0:
+                data['review_history'] = f'{addstr}'
+            else:
+                data['review_history'] = f'{data["review_history"]}\n{addstr}'
         return data
 
 

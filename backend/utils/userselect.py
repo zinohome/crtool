@@ -7,6 +7,9 @@
 
 import os
 import traceback
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import simplejson as json
 from utils.log import log as log
 
@@ -81,8 +84,10 @@ if __name__ == '__main__':
     log.debug(userselect.TSGLeader)
     log.debug(userselect.ssr_dict)
     log.debug(userselect.sdm_dict)
+
     log.debug(userselect.tsg_dict)
     log.debug(userselect.leader_dict)
     log.debug(userselect.leader_emails_str)
     log.debug(userselect.find_tsg_email_by_id('duxincun@cn.ibm.com'))
+    log.debug(datetime.now().astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M"))
 

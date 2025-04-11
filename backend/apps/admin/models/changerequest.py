@@ -223,6 +223,10 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='Comments',
                                                     amis_form_item=amis.Textarea(),
                                                     amis_table_column = amis.TableColumn(toggled=False))
+    review_history: Optional[str] = models.Field(default=None, sa_column=Column(TEXT, nullable=True, index=False),
+                                               title='Review History',
+                                               amis_form_item=amis.Textarea(disabled=True),
+                                               amis_table_column=amis.TableColumn(toggled=False))
     create_time: datetime = models.Field(default_factory= datetime.now,
                                                     title='Create Time',
                                                     nullable=False,
