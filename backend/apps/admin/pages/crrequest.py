@@ -12,9 +12,9 @@ from zoneinfo import ZoneInfo
 
 from fastapi._compat import ModelField
 from fastapi_amis_admin.admin import AdminAction
-from fastapi_amis_admin.crud import CrudEnum
+from fastapi_amis_admin.crud import CrudEnum, BaseApiOut
 from fastapi_amis_admin.crud.base import SchemaFilterT, SchemaUpdateT
-from fastapi_amis_admin.crud.parser import TableModelParser
+from fastapi_amis_admin.crud.parser import TableModelParser, parse_obj_to_schema
 from fastapi_amis_admin.utils.pydantic import model_fields
 from fastapi_user_auth.auth.models import User
 from fastapi_user_auth.globals import auth
@@ -23,7 +23,7 @@ from sqlalchemy import Select, or_, and_, desc
 
 from apps.admin.swiftadmin import SwiftAdmin
 from core.globals import site
-from typing import List, Optional, TYPE_CHECKING, Union, Dict, Any
+from typing import List, Optional, TYPE_CHECKING, Union, Dict, Any, Callable
 from fastapi_amis_admin import admin, amis
 from fastapi_amis_admin.amis import PageSchema, TableColumn, ActionType, Action, Dialog, SizeEnum, Drawer, LevelEnum, \
     TableCRUD, TabsModeEnum, Form, AmisAPI, DisplayModeEnum, InputExcel, InputTable, Page, FormItem, SchemaNode, Group, \
@@ -33,6 +33,10 @@ import simplejson as json
 from fastapi_amis_admin.utils.translation import i18n as _
 from utils.log import log as log
 from apps.admin.models.changerequest import Changerequest
+from utils.mailtool import MailTool
+from utils.userselect import UserSelect
+from typing_extensions import Annotated, Literal
+from fastapi import Body
 
 
 class CrRequest(SwiftAdmin):
@@ -954,3 +958,86 @@ class CrRequest(SwiftAdmin):
         data = await super().on_update_pre(request, obj, item_id)
         data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
         return data
+
+
+    @property
+    def route_create(self) -> Callable:
+        async def route(
+            request: Request,
+            data: Annotated[Union[List[self.schema_create], self.schema_create], Body()],  # type: ignore
+        ) -> BaseApiOut[Union[int, self.schema_model]]:  # type: ignore
+            if not await self.has_create_permission(request, data):
+                return self.error_no_router_permission(request)
+            if not isinstance(data, list):
+                data = [data]
+            try:
+                items = await self.create_items(request, data)
+            except Exception as error:
+                await self.db.async_rollback()
+                return self.error_execute_sql(request=request, error=error)
+            result = len(items)
+            if result == 1:  # if only one item, return the first item
+                result = await self.db.async_run_sync(lambda _: parse_obj_to_schema(items[0], self.schema_model, refresh=True))
+                if result.tsg_rvew_rslt.strip() == 'Submitted':
+                    # Send email to tsg
+                    snd_mail_dress = f'{UserSelect().find_tsg_email_by_id(result.support_tsg_id)}'
+                    snd_mail_subject = f'TLS CR Request提交提醒：{result.ssr}提交了一份Change Request'
+                    snd_mail_body = f'{result.ssr}提交了一份Change Request：\n变更客户：{result.customer_name};\n变更事件：{result.cr_activity_brief};\n请登录CRTool系统查看。'
+                    if result.sngl_pnt_sys.strip() == 'Y':
+                        snd_mail_dress =f'{snd_mail_dress}, {UserSelect().leader_emails_str}'
+                        snd_mail_subject = f'【单点系统变更】TLS CR Request提交提醒：{result.ssr}提交了一份Change Request'
+                    MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+                if result.tsg_rvew_rslt.strip() == 'Approved':
+                    # Send email to ssr
+                    snd_mail_dress = f'{UserSelect().find_ssr_email_by_id(result.ssr)}'
+                    snd_mail_subject = f'TLS CR Request审批提醒：Change Request已审批'
+                    snd_mail_body = f'TSG已经审批了你的Change Request：\n变更客户：{result.customer_name};\n变更事件：{result.cr_activity_brief};\n请登录CRTool系统查看。'
+                    MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+            return BaseApiOut(data=result)
+
+        return route
+
+
+    @property
+    def route_update(self) -> Callable:
+        async def route(
+            request: Request,
+            item_id: self.AnnotatedItemIdList,  # type: ignore
+            data: Annotated[self.schema_update, Body()],  # type: ignore
+        ):
+            if not await self.has_update_permission(request, item_id, data):
+                return self.error_no_router_permission(request)
+            values = await self.on_update_pre(request, data, item_id=item_id)
+            if not values:
+                return self.error_data_handle(request)
+            items = await self.update_items(request, item_id, values)
+            if items[0].tsg_rvew_rslt.strip() == 'Submitted':
+                # Send email to tsg
+                snd_mail_dress = f'{UserSelect().find_tsg_email_by_id(items[0].support_tsg_id)}'
+                snd_mail_subject = f'TLS CR Request提交提醒：{items[0].ssr}提交了一份Change Request'
+                snd_mail_body = f'{items[0].ssr}提交了一份Change Request：\n变更客户：{items[0].customer_name};\n变更事件：{items[0].cr_activity_brief};\n请登录CRTool系统查看。'
+                if items[0].sngl_pnt_sys.strip() == 'Y':
+                    snd_mail_dress = f'{snd_mail_dress}, {UserSelect().leader_emails_str}'
+                    snd_mail_subject = f'【单点系统变更】TLS CR Request提交提醒：{items[0].ssr}提交了一份Change Request'
+                MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+            if items[0].tsg_rvew_rslt.strip() == 'Approved':
+                # Send email to ssr
+                snd_mail_dress = f'{UserSelect().find_ssr_email_by_id(items[0].ssr)}'
+                snd_mail_subject = f'TLS CR Request审批提醒：Change Request已审批'
+                snd_mail_body = f'TSG已经审批了你的Change Request：\n变更客户：{items[0].customer_name};\n变更事件：{items[0].cr_activity_brief};\n请登录CRTool系统查看。'
+                MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+            if items[0].tsg_rvew_rslt.strip() == 'Returned':
+                # Send email to ssr
+                snd_mail_dress = f'{UserSelect().find_ssr_email_by_id(items[0].ssr)}'
+                snd_mail_subject = f'TLS CR Request驳回提醒：Change Request已驳回'
+                snd_mail_body = f'TSG已经驳回了你的Change Request：\n变更客户：{items[0].customer_name};\n变更事件：{items[0].cr_activity_brief};\n请登录CRTool系统查看。'
+                MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+            if items[0].tsg_rvew_rslt.strip() == 'Completed':
+                # Send email to ssr
+                snd_mail_dress = f'{UserSelect().find_ssr_email_by_id(items[0].ssr)}'
+                snd_mail_subject = f'TLS CR Request完成提醒：Change Request已完成'
+                snd_mail_body = f'TSG已经完成了你的Change Request：\n变更客户：{items[0].customer_name};\n变更事件：{items[0].cr_activity_brief};\n请登录CRTool系统查看。'
+                MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
+            return BaseApiOut(data=len(items))
+
+        return route

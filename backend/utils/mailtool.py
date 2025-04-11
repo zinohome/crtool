@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+import ssl
+import traceback
 
 # @Time    : 2025/04/11 09:46
 # @Author  : ZhangJun
@@ -11,10 +13,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 class MailTool(object):
-    _smtp_server = f'smtp.gmail.com'
-    _smtp_port = 587
-    _sender_email = f'tls.delivery.management.tools@gmail.com'
-    _sender_password = f'ciqq wcci pbln ocqs'
+    _smtp_server = 'smtp.163.com'
+    _smtp_port = 25
+    _sender_email = f'13583285152@163.com'
+    _sender_password = 'BDbBazPnYasKrca7'
 
     def send_email(self,receiver_email, subject, body):
         # 创建邮件对象
@@ -25,14 +27,17 @@ class MailTool(object):
         msg.attach(MIMEText(body, "plain"))
         try:
             # 连接到SMTP服务器
-            server = smtplib.SMTP(self._smtp_server, self._smtp_port)
-            server.starttls()  # 启用TLS加密
-            server.login(self._sender_email, self._sender_password)
-            server.send_message(msg)
-            server.quit()
+            smtp = smtplib.SMTP(self._smtp_server, self._smtp_port, timeout=300)
+            smtp.ehlo()
+            smtp.starttls()  # 启用TLS加密
+            smtp.ehlo()
+            (code, resp) = smtp.login(self._sender_email, self._sender_password)
+            smtp.send_message(msg)
+            smtp.quit()
             log.debug("邮件发送成功！")
         except Exception as e:
             log.debug(f"邮件发送失败：{e}")
+            traceback.print_exc()
 
 if __name__ == '__main__':
     mailtool = MailTool()

@@ -66,6 +66,13 @@ class UserSelect(object):
         else:
             return "yangq@cn.ibm.com"
 
+    def find_ssr_email_by_id(self, target_id):
+        ssr_info = self.ssr_dict.get(target_id)
+        if ssr_info:
+            return ssr_info["email"]
+        else:
+            return "yangq@cn.ibm.com"
+
 if __name__ == '__main__':
     userselect = UserSelect()
     log.debug(userselect.SSR)
