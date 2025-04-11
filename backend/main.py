@@ -16,6 +16,7 @@ from core import settings
 from core.globals import auth, site
 from contextlib import asynccontextmanager
 
+from utils.batchuserreg import BatchUserReg
 
 app = FastAPI(debug=settings.debug)
 # 在app应用下每条请求处理之前都附加`request.auth`和`request.user`对象
@@ -47,6 +48,8 @@ async def startup():
     await auth.create_role_user("admin")
     # 创建默认超级管理员,用户名: root,密码: root, 请及时修改密码!!!
     await auth.create_role_user("root")
+    # 创建用户
+    await BatchUserReg().reguser()
     # 运行site的startup方法,加载casbin策略等
     await site.router.startup()
     if not auth.enforcer.enforce("u:admin", site.unique_id, "page", "page"):
