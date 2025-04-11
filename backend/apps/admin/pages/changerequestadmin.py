@@ -43,7 +43,7 @@ class ChangerequestAdmin(SwiftAdmin):
     list_per_page = 20
     list_display = []
     list_filter = [Changerequest.customer_name,Changerequest.cr_activity_brief,Changerequest.ssr,Changerequest.sngl_pnt_sys,Changerequest.support_tsg_id,Changerequest.begin_date,Changerequest.end_date,Changerequest.tsg_rvew_rslt]
-    search_fields = [Changerequest.customer_name,Changerequest.cr_activity_brief,Changerequest.ssr,Changerequest.sngl_pnt_sys,Changerequest.support_tsg_id,Changerequest.begin_date,Changerequest.end_date,Changerequest.tsg_rvew_rslt]
+    search_fields = [Changerequest.customer_name,Changerequest.cr_activity_brief,Changerequest.ssr,Changerequest.sngl_pnt_sys,Changerequest.support_tsg_id,Changerequest.begin_date,Changerequest.end_date,Changerequest.tsg_rvew_rslt,Changerequest.create_time,Changerequest.update_time]
     parent_class = None
     tabsMode = TabsModeEnum.card
     admin_action_maker = [
