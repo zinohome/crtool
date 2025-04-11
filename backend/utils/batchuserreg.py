@@ -58,20 +58,20 @@ class BatchUserReg(object):
         try:
             for ssr in userselect.SSR:
                 user = await auth.db.async_run_sync(self._create_role_user_sync, ssr['id'], ssr['nickname'], ssr['email'], 'SSR')
-                await auth.db.async_commit()
                 log.debug(f'SSR： {user.username} registered !')
+            await auth.db.async_commit()
             for tsg in userselect.TSG:
                 user = await auth.db.async_run_sync(self._create_role_user_sync, tsg['id'], tsg['nickname'], tsg['email'], 'TSG')
-                await auth.db.async_commit()
                 log.debug(f'TSG： {user.username} registered !')
+            await auth.db.async_commit()
             for sdm in userselect.SDM:
                 user = await auth.db.async_run_sync(self._create_role_user_sync, sdm['id'], sdm['nickname'], sdm['email'], 'SDM')
-                await auth.db.async_commit()
                 log.debug(f'SDM： {user.username} registered !')
+            await auth.db.async_commit()
             for leader in userselect.TSGLeader:
                 user = await auth.db.async_run_sync(self._create_role_user_sync, leader['id'], leader['nickname'], leader['email'], 'TSGLeader')
-                await auth.db.async_commit()
                 log.debug(f'TSGLeader： {user.username} registered !')
+            await auth.db.async_commit()
             #user = await auth.db.async_run_sync(self._create_role_user_sync, 'liuyuly@cn.ibm.com','LIU YU','liuyuly@cn.ibm.com','SSR')
             #await auth.db.async_commit()
         except Exception as e:
