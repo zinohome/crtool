@@ -550,7 +550,10 @@ class ChangerequestAdmin(SwiftAdmin):
             formtab = amis.Tabs(tabsMode='card')
             formtab.tabs = []
             fieldlist = []
+            requirelist =[]
             for item in c_form.body:
+                #if item.label is not None and "*" in item.label:
+                #    requirelist.append(item.name)
                 fieldlist.append(item)
             fld_dict = {item.name: item for item in fieldlist}
             customer_fld_lst = []
@@ -965,7 +968,21 @@ class ChangerequestAdmin(SwiftAdmin):
             if not isinstance(data, list):
                 data = [data]
             try:
-                items = await self.create_items(request, data)
+                required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys', 'ssr', 'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no', 'busnss_jstfction', 'onsite_engineer','cr_activity_brief', 'machine_info', 'category', 'prblm_dscrption']
+                errors = {}
+                for k, v in vars(data[0]).items():
+                    if k in required_fields and (not v or not v.strip()):
+                        errors[k] = f"必须填写{k}字段"
+                rtdict = {
+                    "status": 422,
+                    "msg": "",
+                    "errors": errors,
+                    "data": None
+                }
+                if len(errors)>0:
+                    return rtdict
+                else:
+                    items = await self.create_items(request, data)
             except Exception as error:
                 await self.db.async_rollback()
                 return self.error_execute_sql(request=request, error=error)
@@ -988,7 +1005,6 @@ class ChangerequestAdmin(SwiftAdmin):
                     snd_mail_body = f'TSG已经审批了你的Change Request：\n变更客户：{result.customer_name};\n变更事件：{result.cr_activity_brief};\n请登录CRTool系统查看。'
                     MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
             return BaseApiOut(data=result)
-
         return route
 
 
@@ -1004,7 +1020,23 @@ class ChangerequestAdmin(SwiftAdmin):
             values = await self.on_update_pre(request, data, item_id=item_id)
             if not values:
                 return self.error_data_handle(request)
-            items = await self.update_items(request, item_id, values)
+            required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys', 'ssr',
+                               'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no', 'busnss_jstfction',
+                               'onsite_engineer', 'cr_activity_brief', 'machine_info', 'category', 'prblm_dscrption']
+            errors = {}
+            for k, v in values.items():
+                if k in required_fields and (not v or not v.strip()):
+                    errors[k] = f"必须填写{k}字段"
+            rtdict = {
+                "status": 422,
+                "msg": "",
+                "errors": errors,
+                "data": None
+            }
+            if len(errors) > 0:
+                return rtdict
+            else:
+                items = await self.update_items(request, item_id, values)
             if items[0].tsg_rvew_rslt.strip() == 'Submitted':
                 # Send email to tsg
                 snd_mail_dress = f'{UserSelect().find_tsg_email_by_id(items[0].support_tsg_id)}'
@@ -1032,7 +1064,5 @@ class ChangerequestAdmin(SwiftAdmin):
                 snd_mail_subject = f'TLS CR Request完成提醒：Change Request已完成'
                 snd_mail_body = f'TSG已经完成了你的Change Request：\n变更客户：{items[0].customer_name};\n变更事件：{items[0].cr_activity_brief};\n请登录CRTool系统查看。'
                 MailTool().send_email(snd_mail_dress, snd_mail_subject, snd_mail_body)
-
             return BaseApiOut(data=len(items))
-
         return route

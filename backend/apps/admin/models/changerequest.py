@@ -37,13 +37,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     primary_key=True,
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     customer_name: str = models.Field(default=None,
                                                     title='*Customer Name/Number<br>(客户名/客户号)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=True))
     case_number: Optional[str] = models.Field(default=None,
                                                     title='Case No',
@@ -55,7 +55,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Customer Contact Name<br>(客户联系人)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     cstm_cntct_phone: Optional[str] = models.Field(default=None,
                                                     title='Phone',
@@ -67,19 +67,19 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Customer Address<br>(客户客户地址)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     cstm_location: Optional[str] = models.Field(default=None,
                                                     title='*Location<br>(客户所在城市)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     sngl_pnt_sys: Optional[str] = models.Field(default="N",
                                                     title='*是否单点系统变更',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['sngl_pnt_sys']['value'], labelField='label', valueField='value'),
+                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['sngl_pnt_sys']['value'], labelField='label', valueField='value', required=True),
                                                     amis_table_column = amis.TableColumn(toggled=True))
     urgency: Optional[str] = models.Field(default="2",
                                                     title='紧急程度SV(同PMH)',
@@ -97,37 +97,37 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*SSR Contact Name<br>(负责SSR 名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
+                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True, required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     ssr_phone: Optional[str] = models.Field(default=None,
                                                     title='*Phone/MP',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     support_tsg_id: Optional[str] = models.Field(default=None,
                                                     title='*Support TSG ID<br>(技术支持人员名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.TSG, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
+                                                    amis_form_item = amis.Select(options=userselect.TSG, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True, required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     local_sdm: Optional[str] = models.Field(default=None,
                                                     title='*Local SDM<br>(SSR经理)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(creatable=True, source='/crtool/get_sdm_list', labelField='label', valueField='value', searchable=True),
+                                                    amis_form_item = amis.Select(creatable=True, source='/crtool/get_sdm_list', labelField='label', valueField='value', searchable=True, required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     proj_code: Optional[str] = models.Field(default=None,
                                                     title='*Project Code/CSP WO<br>(TSG timereport Input使用)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     cntrt_no: Optional[str] = models.Field(default=None,
                                                     title='*Contract Number',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     busnss_jstfction: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Business Justification<br>(合同中对TSG现场支持的约定以及合理合规的商业理由)',
@@ -141,7 +141,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Onsite Engineer<br>(维修SSR名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
+                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True, required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     begin_date: Optional[str] = models.Field(default_factory= datetime.now,
                                                     title='Begin Date<br>(维护开始时间)',
@@ -159,7 +159,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     amis_table_column = amis.TableColumn(toggled=False))
     cr_activity_brief: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*CR activity Brief<br>(变更描述)',
-                                                    amis_form_item=amis.Textarea(),
+                                                    amis_form_item=amis.Textarea(required = True),
                                                     amis_table_column = amis.TableColumn(toggled=True))
     cr_detail_plan: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='CR Detail Plan<br>(变更方案)',
@@ -173,7 +173,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Machine Type/ModelSN/Machine Status<br>(机器型号、序列号、服务状态)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = "",
+                                                    amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     machine_info_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='Machine Type/ModelSN/Machine Status<br>附件',
@@ -201,17 +201,17 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*变更类型<br>(选择正确的变更类别，以便归档)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['category']['value'], labelField='label', valueField='value', multiple=True),
+                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['category']['value'], labelField='label', valueField='value', multiple=True, required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     machine_count: Optional[str] = models.Field(default=None,
                                                     title='机器数量',
-                                                    nullable=False,
+                                                    nullable=True,
                                                     index=False,
                                                     amis_form_item="",
                                                     amis_table_column = amis.TableColumn(toggled=False))
     prblm_dscrption: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Problem Description and  Help needed<br>(故障现象以及所需帮助)',
-                                                    amis_form_item=amis.Textarea(),
+                                                    amis_form_item=amis.Textarea(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     tsg_rvew_rslt: Optional[str] = models.Field(default="Draft",
                                                     title='TSG Review Result<br>审核结果',
@@ -223,7 +223,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='TSG On Site Needed',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['tsg_onsite']['value'], labelField='label', valueField='value'),
+                                                    amis_form_item=amis.Select(options=appdef.AppVardicts['tsg_onsite']['value'], labelField='label', valueField='value', required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     tsg_comments: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='Comments',
