@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 loglevel = "info"
-workers = 4
+workers = 1
 bind = "0.0.0.0:8843"
 insecure_bind = "0.0.0.0:8880"
 graceful_timeout = 120
