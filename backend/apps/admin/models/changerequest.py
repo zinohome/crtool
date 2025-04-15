@@ -97,7 +97,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*SSR Contact Name<br>(负责SSR 名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id'),
+                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     ssr_phone: Optional[str] = models.Field(default=None,
                                                     title='*Phone/MP',
@@ -109,13 +109,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Support TSG ID<br>(技术支持人员名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.TSG, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id'),
+                                                    amis_form_item = amis.Select(options=userselect.TSG, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     local_sdm: Optional[str] = models.Field(default=None,
                                                     title='*Local SDM<br>(SSR经理)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(creatable=True, source='/crtool/get_sdm_list', labelField='label', valueField='value'),
+                                                    amis_form_item = amis.Select(creatable=True, source='/crtool/get_sdm_list', labelField='label', valueField='value', searchable=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     proj_code: Optional[str] = models.Field(default=None,
                                                     title='*Project Code/CSP WO<br>(TSG timereport Input使用)',
@@ -141,7 +141,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='*Onsite Engineer<br>(维修SSR名字)',
                                                     nullable=False,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id'),
+                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     begin_date: Optional[str] = models.Field(default_factory= datetime.now,
                                                     title='Begin Date<br>(维护开始时间)',
@@ -202,6 +202,12 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=False,
                                                     index=False,
                                                     amis_form_item=amis.Select(options=appdef.AppVardicts['category']['value'], labelField='label', valueField='value', multiple=True),
+                                                    amis_table_column = amis.TableColumn(toggled=False))
+    machine_count: Optional[str] = models.Field(default=None,
+                                                    title='机器数量',
+                                                    nullable=False,
+                                                    index=False,
+                                                    amis_form_item="",
                                                     amis_table_column = amis.TableColumn(toggled=False))
     prblm_dscrption: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=False,index=False),
                                                     title='*Problem Description and  Help needed<br>(故障现象以及所需帮助)',

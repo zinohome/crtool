@@ -49,13 +49,13 @@ class UserSelect(object):
             with open(jsonpath, 'r', encoding="utf-8") as app_file:
                 content = app_file.read()
             user_obj = json.loads(content)
-            self.SSR = sorted(user_obj['SSR'], key=lambda x: x['id'])
+            self.SSR = sorted(user_obj['SSR'], key=lambda x: x['nickname'])
             self.ssr_dict = {ssr["id"]: ssr for ssr in self.SSR}
-            self.SDM = sorted(user_obj['SDM'], key=lambda x: x['id'])
+            self.SDM = sorted(user_obj['SDM'], key=lambda x: x['nickname'])
             self.sdm_dict = {sdm["id"]: sdm for sdm in self.SDM}
-            self.TSG = sorted(user_obj['TSG'], key=lambda x: x['id'])
+            self.TSG = sorted(user_obj['TSG'], key=lambda x: x['nickname'])
             self.tsg_dict = {tsg["id"]: tsg for tsg in self.TSG}
-            self.TSGLeader = sorted(user_obj['TSGLeader'], key=lambda x: x['id'])
+            self.TSGLeader = sorted(user_obj['TSGLeader'], key=lambda x: x['nickname'])
             self.leader_dict = {leader["id"]: leader for leader in self.TSGLeader}
             self.leader_emails_str = ", ".join([leader["email"] for leader in self.TSGLeader])
         except Exception as exp:
