@@ -499,7 +499,7 @@ class CrRequest(SwiftAdmin):
     async def get_read_form(self, request: Request) -> Form:
         r_form = await super().get_read_form(request)
         # 构建主表Read
-        formtab = amis.Tabs(tabsMode='card')
+        formtab = amis.Tabs(tabsMode='strong')
         formtab.tabs = []
         fieldlist = []
         for item in r_form.body:
@@ -563,7 +563,7 @@ class CrRequest(SwiftAdmin):
         user = await auth.get_current_user(request)
         if not bulk:
             # 构建主表Create
-            formtab = amis.Tabs(tabsMode='card')
+            formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             for item in c_form.body:
@@ -626,7 +626,7 @@ class CrRequest(SwiftAdmin):
         u_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
-            formtab = amis.Tabs(tabsMode='card')
+            formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             for item in u_form.body:
@@ -699,7 +699,7 @@ class CrRequest(SwiftAdmin):
         )
         if not bulk:
             # 构建主表Create
-            formtab = amis.Tabs(tabsMode='card')
+            formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             for item in d_form.body:
@@ -807,7 +807,7 @@ class CrRequest(SwiftAdmin):
         r_form.preventEnterSubmit = True
         if not bulk:
             # 构建主表Update
-            formtab = amis.Tabs(tabsMode='card')
+            formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             for item in r_form.body:
