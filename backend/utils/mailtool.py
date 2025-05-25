@@ -19,6 +19,7 @@ class MailTool(object):
     _sender_password = 'BDbBazPnYasKrca7'
 
     def send_email(self,receiver_email, subject, body):
+        '''
         # 创建邮件对象
         msg = MIMEMultipart()
         msg["From"] = self._sender_email
@@ -38,8 +39,11 @@ class MailTool(object):
         except Exception as e:
             log.debug(f"邮件发送失败：{e}")
             traceback.print_exc()
+        '''
+        pass
 
     def send_outlook_email(self,receiver_email, subject, body):
+        '''
         # 创建邮件对象
         msg = MIMEMultipart()
         msg["From"] = self._sender_email
@@ -59,6 +63,8 @@ class MailTool(object):
         except Exception as e:
             log.debug(f"邮件发送失败：{e}")
             traceback.print_exc()
+        '''
+        pass
 
 
 if __name__ == '__main__':
