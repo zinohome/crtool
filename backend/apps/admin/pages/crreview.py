@@ -976,7 +976,25 @@ class CrReview(SwiftAdmin):
             if not isinstance(data, list):
                 data = [data]
             try:
-                items = await self.create_items(request, data)
+                required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys',
+                                   'ssr', 'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no',
+                                   'busnss_jstfction', 'onsite_engineer', 'cr_activity_brief', 'machine_info',
+                                   'category', 'prblm_dscrption']
+                errors = {}
+                if data[0].tsg_rvew_rslt != "Draft":
+                    for k, v in vars(data[0]).items():
+                        if k in required_fields and (not v or not v.strip()):
+                            errors[k] = f"必须填写{k}字段"
+                    rtdict = {
+                        "status": 422,
+                        "msg": "",
+                        "errors": errors,
+                        "data": None
+                    }
+                if len(errors) > 0:
+                    return rtdict
+                else:
+                    items = await self.create_items(request, data)
             except Exception as error:
                 await self.db.async_rollback()
                 return self.error_execute_sql(request=request, error=error)
@@ -1015,7 +1033,31 @@ class CrReview(SwiftAdmin):
             values = await self.on_update_pre(request, data, item_id=item_id)
             if not values:
                 return self.error_data_handle(request)
-            items = await self.update_items(request, item_id, values)
+            try:
+                required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys',
+                                   'ssr',
+                                   'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no',
+                                   'busnss_jstfction',
+                                   'onsite_engineer', 'cr_activity_brief', 'machine_info', 'category',
+                                   'prblm_dscrption']
+                errors = {}
+                if values['tsg_rvew_rslt'] != "Draft":
+                    for k, v in values.items():
+                        if k in required_fields and (not v or not v.strip()):
+                            errors[k] = f"必须填写{k}字段"
+                    rtdict = {
+                        "status": 422,
+                        "msg": "",
+                        "errors": errors,
+                        "data": None
+                    }
+                if len(errors) > 0:
+                    return rtdict
+                else:
+                    items = await self.update_items(request, item_id, values)
+            except Exception as error:
+                await self.db.async_rollback()
+                return self.error_execute_sql(request=request, error=error)
             if items[0].tsg_rvew_rslt.strip() == 'Submitted':
                 # Send email to tsg
                 snd_mail_dress = f'{UserSelect().find_tsg_email_by_id(items[0].support_tsg_id)}'
