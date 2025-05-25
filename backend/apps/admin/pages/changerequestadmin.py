@@ -547,7 +547,7 @@ class ChangerequestAdmin(SwiftAdmin):
         user = await auth.get_current_user(request)
         if not bulk:
             # 构建主表Create
-            formtab = amis.Tabs(tabsMode='simple')
+            formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             requirelist =[]
