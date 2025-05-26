@@ -1094,3 +1094,17 @@ class CrRequest(SwiftAdmin):
             return BaseApiOut(data=len(items))
 
         return route
+
+    @property
+    def route_delete(self) -> Callable:
+        #TODO:只有Draft状态允许删除
+        async def route(
+            request: Request,
+            item_id: self.AnnotatedItemIdList,  # type: ignore
+        ):
+            if not await self.has_delete_permission(request, item_id):
+                return self.error_no_router_permission(request)
+            items = await self.delete_items(request, item_id)
+            return BaseApiOut(data=len(items))
+
+        return route

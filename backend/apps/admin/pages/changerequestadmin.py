@@ -229,6 +229,7 @@ class ChangerequestAdmin(SwiftAdmin):
         # 设置form弹出类型  Drawer | Dialog
         self.action_type = 'Drawer'
     async def get_select(self, request: Request) -> Select:
+        # TODO：不显示Draft状态的CR
         #user = await auth.get_current_user(request)
         #log.debug(user)
         #log.debug(request.user)
