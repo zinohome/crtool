@@ -1,4 +1,4 @@
 #!/bin/bash
 IMGNAME=tls/crtool
-IMGVERSION=v0.1.2s
+IMGVERSION=v0.1.3
 docker build --no-cache -t $IMGNAME:$IMGVERSION .
