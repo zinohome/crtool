@@ -7,6 +7,7 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: SwiftApp
+import traceback
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -1097,14 +1098,22 @@ class CrRequest(SwiftAdmin):
 
     @property
     def route_delete(self) -> Callable:
-        #TODO:只有Draft状态允许删除
         async def route(
             request: Request,
             item_id: self.AnnotatedItemIdList,  # type: ignore
         ):
             if not await self.has_delete_permission(request, item_id):
                 return self.error_no_router_permission(request)
-            items = await self.delete_items(request, item_id)
-            return BaseApiOut(data=len(items))
-
+            try:
+                can_delete_id=[]
+                for id in item_id:
+                    items = await self.fetch_items(id)
+                    if items[0].tsg_rvew_rslt.strip() == 'Draft':
+                        can_delete_id.append(id)
+                delitems = await self.delete_items(request, can_delete_id)
+                return BaseApiOut(data=len(delitems))
+            except Exception as error:
+                await self.db.async_rollback()
+                traceback.print_exc()
+                return self.error_execute_sql(request=request, error=error)
         return route

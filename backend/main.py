@@ -49,7 +49,7 @@ async def startup():
     # 创建默认超级管理员,用户名: root,密码: root, 请及时修改密码!!!
     await auth.create_role_user("root")
     # 创建用户
-    await BatchUserReg().reguser()
+    #await BatchUserReg().reguser()
     # 运行site的startup方法,加载casbin策略等
     await site.router.startup()
     if not auth.enforcer.enforce("u:admin", site.unique_id, "page", "page"):
