@@ -22,6 +22,7 @@ async_db = AsyncDatabase.create(
         "expire_on_commit": False,
     },
     # 连接池配置
+    isolation_level="READ COMMITTED",
     pool_size=10,  # 连接池大小
     max_overflow=10,  # 最大溢出连接数
     pool_timeout=30,  # 连接池超时时间
@@ -35,6 +36,7 @@ sync_db = Database.create(
         "expire_on_commit": False,
     },
     # 连接池配置
+    isolation_level="READ COMMITTED",
     poolclass=QueuePool,  # 使用队列连接池
     pool_size=10,  # 连接池大小
     max_overflow=10,  # 最大溢出连接数
