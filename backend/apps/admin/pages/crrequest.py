@@ -94,6 +94,7 @@ class CrRequest(SwiftAdmin):
                 }
             },
             "label": "暂存",
+            "disabledOn": "['Submitted', 'Approved', 'Completed'].includes(tsg_rvew_rslt)",
             "primary": True
         },
         {
@@ -119,6 +120,7 @@ class CrRequest(SwiftAdmin):
                 }
             },
             "label": "提交",
+            "disabledOn": "['Submitted', 'Approved', 'Completed'].includes(tsg_rvew_rslt)",
             "primary": False
         }
     ]
