@@ -17,37 +17,41 @@ from utils.userselect import UserSelect
 
 class BatchUserReg(object):
     def _create_role_user_sync(self, session: Session, username: str="root", nickname: str="root", email: str="root", role_key: str = "root") -> User:
-        # create admin role
-        role = session.scalar(select(Role).where(Role.key == role_key))
-        if not role:
-            role = Role(key=role_key, name=f"{role_key}")
-            session.add(role)
-            session.flush()
+        try:
+            # create admin role
+            role = session.scalar(select(Role).where(Role.key == role_key))
+            if not role:
+                role = Role(key=role_key, name=f"{role_key}")
+                session.add(role)
+                session.flush()
 
-        # create user
-        user = session.scalar(select(auth.user_model).where(auth.user_model.username == username))
-        if not user:
-            user = auth.user_model(
-                username=username,
-                password=auth.pwd_context.hash(username),
-                nickname=nickname,
-                email=email,
+            # create user
+            user = session.scalar(select(auth.user_model).where(auth.user_model.username == username))
+            if not user:
+                user = auth.user_model(
+                    username=username,
+                    password=auth.pwd_context.hash(username),
+                    nickname=nickname,
+                    email=email,
+                )
+                session.add(user)
+                session.flush()
+            # create casbin rule
+            rule = session.scalar(
+                select(CasbinRule).where(
+                    CasbinRule.ptype == "g",
+                    CasbinRule.v0 == "u:" + username,
+                    CasbinRule.v1 == "r:" + role_key,
+                )
             )
-            session.add(user)
-            session.flush()
-        # create casbin rule
-        rule = session.scalar(
-            select(CasbinRule).where(
-                CasbinRule.ptype == "g",
-                CasbinRule.v0 == "u:" + username,
-                CasbinRule.v1 == "r:" + role_key,
-            )
-        )
-        if not rule:
-            rule = CasbinRule(ptype="g", v0="u:" + username, v1="r:" + role_key)
-            session.add(rule)
-            session.flush()
-        return user
+            if not rule:
+                rule = CasbinRule(ptype="g", v0="u:" + username, v1="r:" + role_key)
+                session.add(rule)
+                session.flush()
+            return user
+        except Exception as exp:
+            print('Exception at BatchUserReg._create_role_user_sync() %s ' % exp)
+            traceback.print_exc()
 
     async def reguser(self):
         userselect = UserSelect()
@@ -74,7 +78,8 @@ class BatchUserReg(object):
             await auth.db.async_commit()
             #user = await auth.db.async_run_sync(self._create_role_user_sync, 'liuyuly@cn.ibm.com','LIU YU','liuyuly@cn.ibm.com','SSR')
             #await auth.db.async_commit()
-        except Exception as e:
+        except Exception as exp:
+            print('Exception at BatchUserReg.reguser() %s ' % exp)
             traceback.print_exc()
 
 

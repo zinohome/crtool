@@ -38,8 +38,8 @@ async def get_sdm_list(sess: SyncSess):
         rows = result.fetchall()
         result_list = [dict(row._asdict())['local_sdm'] for row in rows]
         sdm_list = [{"label": name, "value": name} for name in result_list]
-    except Exception as e:
-        log.error('SQL query Error !')
+    except Exception as exp:
+        print('Exception at apis.get_sdm_list() %s ' % exp)
         traceback.print_exc()
     return sdm_list
 
