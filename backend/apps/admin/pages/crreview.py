@@ -7,6 +7,7 @@
 #  @Author  : Zhang Jun
 #  @Email   : ibmzhangjun@139.com
 #  @Software: SwiftApp
+import traceback
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -230,39 +231,82 @@ class CrReview(SwiftAdmin):
         #user = await auth.get_current_user(request)
         #log.debug(user)
         #log.debug(request.user)
-        stmt = await super().get_select(request)
-        '''
-                log.debug(stmt)
-                log.debug(stmt.where(Changerequest.ssr == request.user.username))
-                log.debug(stmt.where(or_(
-                    Changerequest.ssr == request.user.username,and_(
-                        Changerequest.local_sdm == request.user.username,
-                        Changerequest.tsg_rvew_rslt != 'Draft'
-                    ))))
-                '''
-        return stmt.where(and_(
-                Changerequest.support_tsg_id == request.user.username,
-                Changerequest.tsg_rvew_rslt != 'Draft',
-                Changerequest.tsg_rvew_rslt != 'Returned'
-            )
-        ).order_by(desc(Changerequest.update_time))
+        try:
+            stmt = await super().get_select(request)
+            '''
+                        log.debug(stmt)
+                        log.debug(stmt.where(Changerequest.ssr == request.user.username))
+                        log.debug(stmt.where(or_(
+                            Changerequest.ssr == request.user.username,and_(
+                                Changerequest.local_sdm == request.user.username,
+                                Changerequest.tsg_rvew_rslt != 'Draft'
+                            ))))
+                        '''
+            return stmt.where(and_(
+                    Changerequest.support_tsg_id == request.user.username,
+                    Changerequest.tsg_rvew_rslt != 'Draft',
+                    Changerequest.tsg_rvew_rslt != 'Returned'
+                )
+            ).order_by(desc(Changerequest.update_time))
+        except Exception as exp:
+            print('Exception at CrReview.get_select() %s ' % exp)
+            traceback.print_exc()
 
     async def get_create_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
-        if not bulk:
+        try:
+            if not bulk:
+                if self.action_type == 'Drawer':
+                    return ActionType.Drawer(
+                        icon="fa fa-plus pull-left",
+                        label=_("Create"),
+                        level=LevelEnum.primary,
+                        drawer=Drawer(
+                            title=_("Create") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_create_form(request, bulk=bulk),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        icon="fa fa-plus pull-left",
+                        label=_("Create"),
+                        level=LevelEnum.primary,
+                        dialog=Dialog(
+                            title=_("Create") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_create_form(request, bulk=bulk),
+                        ),
+                    )
             if self.action_type == 'Drawer':
-                return ActionType.Drawer(
+                return ActionType.Dialog(
                     icon="fa fa-plus pull-left",
-                    label=_("Create"),
+                    label=_("Bulk Create"),
                     level=LevelEnum.primary,
-                    drawer=Drawer(
-                        title=_("Create") + " - " + _(self.page_schema.label),
+                    dialog=Dialog(
+                        title=_("Bulk Create") + " - " + _(self.page_schema.label),
                         id="form_setvalue",
                         position="right",
                         showCloseButton=False,
                         actions=self.createactions,
                         overlay=False,
                         closeOnOutside=False,
-                        size=SizeEnum.lg,
+                        size=SizeEnum.full,
                         resizable=True,
                         width="900px",
                         body=await self.get_create_form(request, bulk=bulk),
@@ -271,546 +315,219 @@ class CrReview(SwiftAdmin):
             else:
                 return ActionType.Dialog(
                     icon="fa fa-plus pull-left",
-                    label=_("Create"),
+                    label=_("Bulk Create"),
                     level=LevelEnum.primary,
                     dialog=Dialog(
-                        title=_("Create") + " - " + _(self.page_schema.label),
+                        title=_("Bulk Create") + " - " + _(self.page_schema.label),
                         id="form_setvalue",
                         position="right",
                         showCloseButton=False,
                         actions=self.createactions,
                         overlay=False,
                         closeOnOutside=False,
-                        size=SizeEnum.lg,
+                        size=SizeEnum.full,
                         resizable=True,
                         width="900px",
                         body=await self.get_create_form(request, bulk=bulk),
                     ),
                 )
-        if self.action_type == 'Drawer':
-            return ActionType.Dialog(
-                icon="fa fa-plus pull-left",
-                label=_("Bulk Create"),
-                level=LevelEnum.primary,
-                dialog=Dialog(
-                    title=_("Bulk Create") + " - " + _(self.page_schema.label),
-                    id="form_setvalue",
-                    position="right",
-                    showCloseButton=False,
-                    actions=self.createactions,
-                    overlay=False,
-                    closeOnOutside=False,
-                    size=SizeEnum.full,
-                    resizable=True,
-                    width="900px",
-                    body=await self.get_create_form(request, bulk=bulk),
-                ),
-            )
-        else:
-            return ActionType.Dialog(
-                icon="fa fa-plus pull-left",
-                label=_("Bulk Create"),
-                level=LevelEnum.primary,
-                dialog=Dialog(
-                    title=_("Bulk Create") + " - " + _(self.page_schema.label),
-                    id="form_setvalue",
-                    position="right",
-                    showCloseButton=False,
-                    actions=self.createactions,
-                    overlay=False,
-                    closeOnOutside=False,
-                    size=SizeEnum.full,
-                    resizable=True,
-                    width="900px",
-                    body=await self.get_create_form(request, bulk=bulk),
-                ),
-            )
+        except Exception as exp:
+            print('Exception at CrReview.get_create_action() %s ' % exp)
+            traceback.print_exc()
 
     async def get_read_action(self, request: Request) -> Optional[Action]:
-        if not self.schema_read:
-            return None
-        if self.action_type == 'Drawer':
-            return ActionType.Drawer(
-                icon="fas fa-eye",
-                tooltip=_("View"),
-                drawer=Drawer(
-                    title=_("View") + " - " + _(self.page_schema.label),
-                    position="right",
-                    showCloseButton=False,
-                    actions=self.readactions,
-                    overlay=False,
-                    closeOnOutside=False,
-                    size=SizeEnum.lg,
-                    resizable=True,
-                    width="900px",
-                    body=await self.get_read_form(request),
-                ),
-            )
-        else:
-            return ActionType.Dialog(
-                icon="fas fa-eye",
-                tooltip=_("View"),
-                dialog=Dialog(
-                    title=_("View") + " - " + _(self.page_schema.label),
-                    position="right",
-                    showCloseButton=False,
-                    actions=self.readactions,
-                    overlay=False,
-                    closeOnOutside=False,
-                    size=SizeEnum.lg,
-                    resizable=True,
-                    width="900px",
-                    body=await self.get_read_form(request),
-                ),
-            )
+        try:
+            if not self.schema_read:
+                return None
+            if self.action_type == 'Drawer':
+                return ActionType.Drawer(
+                    icon="fas fa-eye",
+                    tooltip=_("View"),
+                    drawer=Drawer(
+                        title=_("View") + " - " + _(self.page_schema.label),
+                        position="right",
+                        showCloseButton=False,
+                        actions=self.readactions,
+                        overlay=False,
+                        closeOnOutside=False,
+                        size=SizeEnum.lg,
+                        resizable=True,
+                        width="900px",
+                        body=await self.get_read_form(request),
+                    ),
+                )
+            else:
+                return ActionType.Dialog(
+                    icon="fas fa-eye",
+                    tooltip=_("View"),
+                    dialog=Dialog(
+                        title=_("View") + " - " + _(self.page_schema.label),
+                        position="right",
+                        showCloseButton=False,
+                        actions=self.readactions,
+                        overlay=False,
+                        closeOnOutside=False,
+                        size=SizeEnum.lg,
+                        resizable=True,
+                        width="900px",
+                        body=await self.get_read_form(request),
+                    ),
+                )
+        except Exception as exp:
+            print('Exception at CrReview.get_read_action() %s ' % exp)
+            traceback.print_exc()
 
     async def get_update_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
-        if not bulk:
-            if self.action_type == 'Drawer':
-                return ActionType.Drawer(
-                    icon="fa fa-pencil",
-                    tooltip=_("Update"),
-                    drawer=Drawer(
-                        title=_("Update") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_update_form(request, bulk=bulk),
-                    ),
-                )
+        try:
+            if not bulk:
+                if self.action_type == 'Drawer':
+                    return ActionType.Drawer(
+                        icon="fa fa-pencil",
+                        tooltip=_("Update"),
+                        drawer=Drawer(
+                            title=_("Update") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_update_form(request, bulk=bulk),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        icon="fa fa-pencil",
+                        tooltip=_("Update"),
+                        dialog=Dialog(
+                            title=_("Update") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_update_form(request, bulk=bulk),
+                        ),
+                    )
+            elif self.bulk_update_fields:
+                if self.action_type == 'Drawer':
+                    return ActionType.Dialog(
+                        label=_("Bulk Update"),
+                        dialog=Dialog(
+                            title=_("Bulk Update") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_update_form(request, bulk=True),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        label=_("Bulk Update"),
+                        dialog=Dialog(
+                            title=_("Bulk Update") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_update_form(request, bulk=True),
+                        ),
+                    )
             else:
-                return ActionType.Dialog(
-                    icon="fa fa-pencil",
-                    tooltip=_("Update"),
-                    dialog=Dialog(
-                        title=_("Update") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_update_form(request, bulk=bulk),
-                    ),
-                )
-        elif self.bulk_update_fields:
-            if self.action_type == 'Drawer':
-                return ActionType.Dialog(
-                    label=_("Bulk Update"),
-                    dialog=Dialog(
-                        title=_("Bulk Update") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_update_form(request, bulk=True),
-                    ),
-                )
-            else:
-                return ActionType.Dialog(
-                    label=_("Bulk Update"),
-                    dialog=Dialog(
-                        title=_("Bulk Update") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_update_form(request, bulk=True),
-                    ),
-                )
-        else:
-            return None
+                return None
+        except Exception as exp:
+            print('Exception at CrReview.get_update_action() %s ' % exp)
+            traceback.print_exc()
 
     async def get_print_action(self, request: Request) -> Optional[Action]:
-        if not self.schema_read:
-            return None
-        actiontype = ActionType.Dialog(
-            icon="fas fa-print",
-            tooltip=_("Print"),
-            dialog=Dialog(
-                title=_(self.page_schema.label),
-                size=SizeEnum.lg,
-                showCloseButton=False,
-                actions=[
-                    {
-                        "type": "button",
-                        "actionType": "cancel",
-                        "label": "取消",
-                        "Style": {
-                            ".noprint": {
-                                "display": "none"
-                            }
+        try:
+            if not self.schema_read:
+                return None
+            actiontype = ActionType.Dialog(
+                icon="fas fa-print",
+                tooltip=_("Print"),
+                dialog=Dialog(
+                    title=_(self.page_schema.label),
+                    size=SizeEnum.lg,
+                    showCloseButton=False,
+                    actions=[
+                        {
+                            "type": "button",
+                            "actionType": "cancel",
+                            "label": "取消",
+                            "Style": {
+                                ".noprint": {
+                                    "display": "none"
+                                }
+                            },
+                            "primary": False
                         },
-                        "primary": False
-                    },
-                    {
-                        "type": "button",
-                        "label": "打印",
-                        "onEvent": {
-                            "click": {
-                                "actions": [
-                                    {
-                                        "actionType": "custom",
-                                        "ignoreError": False,
-                                        "script": "doAction(window.print());"
-                                    }
-                                ]
-                            }
-                        },
-                        "wrapperCustomStyle": {
-                            ".noprint": {
-                                "display": "none"
-                            }
-                        },
-                        "primary": True
-                    }
-                ],
-                body=await self.get_print_form(request),
-            ),
-        )
-        return actiontype
+                        {
+                            "type": "button",
+                            "label": "打印",
+                            "onEvent": {
+                                "click": {
+                                    "actions": [
+                                        {
+                                            "actionType": "custom",
+                                            "ignoreError": False,
+                                            "script": "doAction(window.print());"
+                                        }
+                                    ]
+                                }
+                            },
+                            "wrapperCustomStyle": {
+                                ".noprint": {
+                                    "display": "none"
+                                }
+                            },
+                            "primary": True
+                        }
+                    ],
+                    body=await self.get_print_form(request),
+                ),
+            )
+            return actiontype
+        except Exception as exp:
+            print('Exception at CrReview.get_print_action() %s ' % exp)
+            traceback.print_exc()
 
     async def get_print_form(self, request: Request) -> Form:
-        p_form = await super().get_read_form(request)
-        return p_form
+        try:
+            p_form = await super().get_read_form(request)
+            return p_form
+        except Exception as exp:
+            print('Exception at CrReview.get_print_form() %s ' % exp)
+            traceback.print_exc()
 
     async def get_read_form(self, request: Request) -> Form:
-        r_form = await super().get_read_form(request)
-        # 构建主表Read
-        formtab = amis.Tabs(tabsMode='strong')
-        formtab.tabs = []
-        fieldlist = []
-        for item in r_form.body:
-            if item.name != self.pk_name:
-                fieldlist.append(item)
-        fld_dict = {item.name: item for item in fieldlist}
-        customer_fld_lst = []
-        customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
-        customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-        customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
-        customer_fld_lst.append(Divider())
-        customer_fld_lst.append(
-            Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
-        customer_fld_lst.append(Divider())
-        customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-        basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
-        ssr_fld_lst = []
-        ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
-        ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
-        ssr_fld_lst.append(Divider())
-        ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
-        proj_fld_lst = []
-        proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
-        proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
-        proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
-        proj_fld_lst.append(Divider())
-        projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
-        cr_fld_lst = []
-        cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
-        proj_fld_lst.append(Divider())
-        cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
-        cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
-        cr_fld_lst.append(Divider())
-        cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
-        cr_fld_lst.append(Divider())
-        cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
-        crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
-        review_fld_lst = []
-        review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
-        review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
-        review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
-        review_fld_lst.append(Divider())
-        review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
-        reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
-        formtab.tabs.append(basictabitem)
-        formtab.tabs.append(ssrtabitem)
-        formtab.tabs.append(projtabitem)
-        formtab.tabs.append(crtabitem)
-        formtab.tabs.append(reviewtabitem)
-        r_form.body = formtab
-        return r_form
-
-    async def get_create_form(self, request: Request, bulk: bool = False) -> Form:
-        c_form = await super().get_create_form(request, bulk)
-        c_form.preventEnterSubmit=True
-        user = await auth.get_current_user(request)
-        if not bulk:
-            # 构建主表Create
-            formtab = amis.Tabs(tabsMode='strong')
-            formtab.tabs = []
-            fieldlist = []
-            for item in c_form.body:
-                fieldlist.append(item)
-            fld_dict = {item.name: item for item in fieldlist}
-            customer_fld_lst = []
-            customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(
-                Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
-            ssr_fld_lst = []
-            fld_dict["ssr"].value = user.username
-            ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
-            ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
-            ssr_fld_lst.append(Divider())
-            ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
-            proj_fld_lst = []
-            proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
-            proj_fld_lst.append(Divider())
-            projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
-            cr_fld_lst = []
-            cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
-            proj_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
-            crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
-            review_fld_lst = []
-            review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
-            review_fld_lst.append(Divider())
-            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
-            reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
-            formtab.tabs.append(basictabitem)
-            formtab.tabs.append(ssrtabitem)
-            formtab.tabs.append(projtabitem)
-            formtab.tabs.append(crtabitem)
-            formtab.tabs.append(reviewtabitem)
-            c_form.body = formtab
-        return c_form
-
-    async def get_update_form(self, request: Request, bulk: bool = False) -> Form:
-        u_form = await super().get_update_form(request, bulk)
-        u_form.preventEnterSubmit = True
-        if not bulk:
-            # 构建主表Update
-            formtab = amis.Tabs(tabsMode='strong')
-            formtab.tabs = []
-            fieldlist = []
-            for item in u_form.body:
-                fieldlist.append(item)
-            fld_dict = {item.name: item for item in fieldlist}
-            customer_fld_lst = []
-            customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(
-                Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
-            ssr_fld_lst = []
-            ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
-            ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
-            ssr_fld_lst.append(Divider())
-            ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
-            proj_fld_lst = []
-            proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
-            proj_fld_lst.append(Divider())
-            projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
-            cr_fld_lst = []
-            cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
-            proj_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
-            crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
-            review_fld_lst = []
-            review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
-            review_fld_lst.append(Divider())
-            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
-            reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
-            formtab.tabs.append(basictabitem)
-            formtab.tabs.append(ssrtabitem)
-            formtab.tabs.append(projtabitem)
-            formtab.tabs.append(crtabitem)
-            formtab.tabs.append(reviewtabitem)
-            u_form.body = formtab
-        return u_form
-
-    async def get_duplicate_form_inner(self, request: Request, bulk: bool = False) -> Form:
-        extra = {}
-        if not bulk:
-            api = f"post:{self.router_path}/item"
-            fields = model_fields(self.schema_model).values()
-            # fields = model_fields(BaseCrud._create_schema_update()).values()
-            if self.schema_read:
-                extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
-        d_form = Form(
-            api=api,
-            name="create",
-            body=await self._conv_modelfields_to_formitems(request, fields, CrudEnum.create),
-            **extra,
-        )
-        if not bulk:
-            # 构建主表Create
-            formtab = amis.Tabs(tabsMode='strong')
-            formtab.tabs = []
-            fieldlist = []
-            for item in d_form.body:
-                fieldlist.append(item)
-            fld_dict = {item.name: item for item in fieldlist}
-            customer_fld_lst = []
-            customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(
-                Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
-            customer_fld_lst.append(Divider())
-            customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
-            basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
-            ssr_fld_lst = []
-            ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
-            ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
-            ssr_fld_lst.append(Divider())
-            ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
-            proj_fld_lst = []
-            proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
-            proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
-            proj_fld_lst.append(Divider())
-            projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
-            cr_fld_lst = []
-            cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
-            proj_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
-            cr_fld_lst.append(Divider())
-            cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
-            crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
-            review_fld_lst = []
-            review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
-            review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
-            review_fld_lst.append(Divider())
-            review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
-            reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
-            formtab.tabs.append(basictabitem)
-            formtab.tabs.append(ssrtabitem)
-            formtab.tabs.append(projtabitem)
-            formtab.tabs.append(crtabitem)
-            formtab.tabs.append(reviewtabitem)
-            d_form.body = formtab
-        return d_form
-
-    async def get_duplicate_form(self, request: Request, bulk: bool = False) -> Form:
-        d_form = await self.get_duplicate_form_inner(request, bulk)
-        d_form.preventEnterSubmit = True
-        return d_form
-
-    async def get_duplicate_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
-        if not bulk:
-            if self.action_type == 'Drawer':
-                return ActionType.Drawer(
-                    icon="fa fa-copy",
-                    tooltip=_("复制"),
-                    drawer=Drawer(
-                        title=_("复制") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_duplicate_form(request, bulk=bulk),
-                    ),
-                )
-            else:
-                return ActionType.Dialog(
-                    icon="fa fa-copy",
-                    tooltip=_("复制"),
-                    dialog=Dialog(
-                        title=_("复制") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.createactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_duplicate_form(request, bulk=bulk),
-                    ),
-                )
-        else:
-            return None
-
-    async def get_review_form(self, request: Request, bulk: bool = False) -> Form:
-        r_form = await super().get_update_form(request, bulk)
-        r_form.preventEnterSubmit = True
-        if not bulk:
-            # 构建主表Update
+        try:
+            r_form = await super().get_read_form(request)
+            # 构建主表Read
             formtab = amis.Tabs(tabsMode='strong')
             formtab.tabs = []
             fieldlist = []
             for item in r_form.body:
-                if item.name not in ["tsg_onsite", "tsg_comments"]:
-                    item.disabled = True
-                fieldlist.append(item)
+                if item.name != self.pk_name:
+                    fieldlist.append(item)
             fld_dict = {item.name: item for item in fieldlist}
             customer_fld_lst = []
             customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
@@ -861,83 +578,419 @@ class CrReview(SwiftAdmin):
             formtab.tabs.append(crtabitem)
             formtab.tabs.append(reviewtabitem)
             r_form.body = formtab
-        return r_form
+            return r_form
+        except Exception as exp:
+            print('Exception at CrReview.get_read_form() %s ' % exp)
+            traceback.print_exc()
+
+    async def get_create_form(self, request: Request, bulk: bool = False) -> Form:
+        try:
+            c_form = await super().get_create_form(request, bulk)
+            c_form.preventEnterSubmit=True
+            user = await auth.get_current_user(request)
+            if not bulk:
+                # 构建主表Create
+                formtab = amis.Tabs(tabsMode='strong')
+                formtab.tabs = []
+                fieldlist = []
+                for item in c_form.body:
+                    fieldlist.append(item)
+                fld_dict = {item.name: item for item in fieldlist}
+                customer_fld_lst = []
+                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
+                basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
+                ssr_fld_lst = []
+                fld_dict["ssr"].value = user.username
+                ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
+                ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
+                ssr_fld_lst.append(Divider())
+                ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
+                proj_fld_lst = []
+                proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
+                proj_fld_lst.append(Divider())
+                projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
+                cr_fld_lst = []
+                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
+                proj_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
+                crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
+                review_fld_lst = []
+                review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
+                review_fld_lst.append(Divider())
+                review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
+                reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
+                formtab.tabs.append(basictabitem)
+                formtab.tabs.append(ssrtabitem)
+                formtab.tabs.append(projtabitem)
+                formtab.tabs.append(crtabitem)
+                formtab.tabs.append(reviewtabitem)
+                c_form.body = formtab
+            return c_form
+        except Exception as exp:
+            print('Exception at CrReview.get_create_form() %s ' % exp)
+            traceback.print_exc()
+
+    async def get_update_form(self, request: Request, bulk: bool = False) -> Form:
+        try:
+            u_form = await super().get_update_form(request, bulk)
+            u_form.preventEnterSubmit = True
+            if not bulk:
+                # 构建主表Update
+                formtab = amis.Tabs(tabsMode='strong')
+                formtab.tabs = []
+                fieldlist = []
+                for item in u_form.body:
+                    fieldlist.append(item)
+                fld_dict = {item.name: item for item in fieldlist}
+                customer_fld_lst = []
+                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
+                basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
+                ssr_fld_lst = []
+                ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
+                ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
+                ssr_fld_lst.append(Divider())
+                ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
+                proj_fld_lst = []
+                proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
+                proj_fld_lst.append(Divider())
+                projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
+                cr_fld_lst = []
+                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
+                proj_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
+                crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
+                review_fld_lst = []
+                review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
+                review_fld_lst.append(Divider())
+                review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
+                reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
+                formtab.tabs.append(basictabitem)
+                formtab.tabs.append(ssrtabitem)
+                formtab.tabs.append(projtabitem)
+                formtab.tabs.append(crtabitem)
+                formtab.tabs.append(reviewtabitem)
+                u_form.body = formtab
+            return u_form
+        except Exception as exp:
+            print('Exception at CrReview.get_update_form() %s ' % exp)
+            traceback.print_exc()
+
+    async def get_duplicate_form_inner(self, request: Request, bulk: bool = False) -> Form:
+        try:
+            extra = {}
+            if not bulk:
+                api = f"post:{self.router_path}/item"
+                fields = model_fields(self.schema_model).values()
+                # fields = model_fields(BaseCrud._create_schema_update()).values()
+                if self.schema_read:
+                    extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
+            d_form = Form(
+                api=api,
+                name="create",
+                body=await self._conv_modelfields_to_formitems(request, fields, CrudEnum.create),
+                **extra,
+            )
+            if not bulk:
+                # 构建主表Create
+                formtab = amis.Tabs(tabsMode='strong')
+                formtab.tabs = []
+                fieldlist = []
+                for item in d_form.body:
+                    fieldlist.append(item)
+                fld_dict = {item.name: item for item in fieldlist}
+                customer_fld_lst = []
+                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
+                basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
+                ssr_fld_lst = []
+                ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
+                ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
+                ssr_fld_lst.append(Divider())
+                ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
+                proj_fld_lst = []
+                proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
+                proj_fld_lst.append(Divider())
+                projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
+                cr_fld_lst = []
+                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
+                proj_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
+                crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
+                review_fld_lst = []
+                review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
+                review_fld_lst.append(Divider())
+                review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
+                reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
+                formtab.tabs.append(basictabitem)
+                formtab.tabs.append(ssrtabitem)
+                formtab.tabs.append(projtabitem)
+                formtab.tabs.append(crtabitem)
+                formtab.tabs.append(reviewtabitem)
+                d_form.body = formtab
+            return d_form
+        except Exception as exp:
+            print('Exception at CrReview.get_duplicate_form_inner() %s ' % exp)
+            traceback.print_exc()
+
+    async def get_duplicate_form(self, request: Request, bulk: bool = False) -> Form:
+        d_form = await self.get_duplicate_form_inner(request, bulk)
+        d_form.preventEnterSubmit = True
+        return d_form
+
+    async def get_duplicate_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
+        try:
+            if not bulk:
+                if self.action_type == 'Drawer':
+                    return ActionType.Drawer(
+                        icon="fa fa-copy",
+                        tooltip=_("复制"),
+                        drawer=Drawer(
+                            title=_("复制") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_duplicate_form(request, bulk=bulk),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        icon="fa fa-copy",
+                        tooltip=_("复制"),
+                        dialog=Dialog(
+                            title=_("复制") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.createactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_duplicate_form(request, bulk=bulk),
+                        ),
+                    )
+            else:
+                return None
+        except Exception as exp:
+            print('Exception at CrReview.get_duplicate_action() %s ' % exp)
+            traceback.print_exc()
+
+    async def get_review_form(self, request: Request, bulk: bool = False) -> Form:
+        try:
+            r_form = await super().get_update_form(request, bulk)
+            r_form.preventEnterSubmit = True
+            if not bulk:
+                # 构建主表Update
+                formtab = amis.Tabs(tabsMode='strong')
+                formtab.tabs = []
+                fieldlist = []
+                for item in r_form.body:
+                    if item.name not in ["tsg_onsite", "tsg_comments"]:
+                        item.disabled = True
+                    fieldlist.append(item)
+                fld_dict = {item.name: item for item in fieldlist}
+                customer_fld_lst = []
+                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
+                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
+                customer_fld_lst.append(Divider())
+                customer_fld_lst.append(Group(body=[fld_dict["create_time"], fld_dict["update_time"]]))
+                basictabitem = amis.Tabs.Item(title=_('Customer'), icon='fa fa-university', className="bg-blue-100", body=customer_fld_lst)
+                ssr_fld_lst = []
+                ssr_fld_lst.append(Group(body=[fld_dict["ssr"], fld_dict["ssr_phone"]]))
+                ssr_fld_lst.append(Group(body=[fld_dict["support_tsg_id"], fld_dict["local_sdm"]]))
+                ssr_fld_lst.append(Divider())
+                ssrtabitem = amis.Tabs.Item(title=_('SSR'), icon='fa fa-users', className="bg-yellow-100", body=ssr_fld_lst)
+                proj_fld_lst = []
+                proj_fld_lst.append(Group(body=[fld_dict["proj_code"], fld_dict["cntrt_no"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction"]]))
+                proj_fld_lst.append(Group(body=[fld_dict["busnss_jstfction_attch"]]))
+                proj_fld_lst.append(Divider())
+                projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
+                cr_fld_lst = []
+                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
+                proj_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
+                cr_fld_lst.append(Divider())
+                cr_fld_lst.append(Group(body=[fld_dict["prblm_dscrption"]]))
+                crtabitem = amis.Tabs.Item(title=_('Change'), icon='fa fa-cogs', className="bg-green-100", body=cr_fld_lst)
+                review_fld_lst = []
+                review_fld_lst.append(Group(body=[fld_dict["tsg_onsite"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_rvew_rslt"]]))
+                review_fld_lst.append(Group(body=[fld_dict["tsg_comments"]]))
+                review_fld_lst.append(Divider())
+                review_fld_lst.append(Group(body=[fld_dict["review_history"]]))
+                reviewtabitem = amis.Tabs.Item(title=_('Review'), icon='fa fa-gavel', className="bg-purple-100", body=review_fld_lst)
+                formtab.tabs.append(basictabitem)
+                formtab.tabs.append(ssrtabitem)
+                formtab.tabs.append(projtabitem)
+                formtab.tabs.append(crtabitem)
+                formtab.tabs.append(reviewtabitem)
+                r_form.body = formtab
+            return r_form
+        except Exception as exp:
+            print('Exception at CrReview.get_review_form() %s ' % exp)
+            traceback.print_exc()
 
     async def get_review_action(self, request: Request, bulk: bool = False) -> Optional[Action]:
-        if not bulk:
-            if self.action_type == 'Drawer':
-                return ActionType.Drawer(
-                    icon="fa fa-share-alt",
-                    tooltip=_("审批"),
-                    drawer=Drawer(
-                        title=_("Review") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.reviewactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_review_form(request, bulk=bulk),
-                    ),
-                )
+        try:
+            if not bulk:
+                if self.action_type == 'Drawer':
+                    return ActionType.Drawer(
+                        icon="fa fa-share-alt",
+                        tooltip=_("审批"),
+                        drawer=Drawer(
+                            title=_("Review") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.reviewactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_review_form(request, bulk=bulk),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        icon="fa fa-share-alt",
+                        tooltip=_("审批"),
+                        dialog=Dialog(
+                            title=_("Review") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.reviewactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_review_form(request, bulk=bulk),
+                        ),
+                    )
+            elif self.bulk_update_fields:
+                if self.action_type == 'Drawer':
+                    return ActionType.Dialog(
+                        label=_("Bulk Review"),
+                        dialog=Dialog(
+                            title=_("Bulk Review") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.reviewactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_review_form(request, bulk=True),
+                        ),
+                    )
+                else:
+                    return ActionType.Dialog(
+                        label=_("Bulk Review"),
+                        dialog=Dialog(
+                            title=_("Bulk Review") + " - " + _(self.page_schema.label),
+                            id="form_setvalue",
+                            position="right",
+                            showCloseButton=False,
+                            actions=self.reviewactions,
+                            overlay=False,
+                            closeOnOutside=False,
+                            size=SizeEnum.lg,
+                            resizable=True,
+                            width="900px",
+                            body=await self.get_review_form(request, bulk=True),
+                        ),
+                    )
             else:
-                return ActionType.Dialog(
-                    icon="fa fa-share-alt",
-                    tooltip=_("审批"),
-                    dialog=Dialog(
-                        title=_("Review") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.reviewactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_review_form(request, bulk=bulk),
-                    ),
-                )
-        elif self.bulk_update_fields:
-            if self.action_type == 'Drawer':
-                return ActionType.Dialog(
-                    label=_("Bulk Review"),
-                    dialog=Dialog(
-                        title=_("Bulk Review") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.reviewactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_review_form(request, bulk=True),
-                    ),
-                )
-            else:
-                return ActionType.Dialog(
-                    label=_("Bulk Review"),
-                    dialog=Dialog(
-                        title=_("Bulk Review") + " - " + _(self.page_schema.label),
-                        id="form_setvalue",
-                        position="right",
-                        showCloseButton=False,
-                        actions=self.reviewactions,
-                        overlay=False,
-                        closeOnOutside=False,
-                        size=SizeEnum.lg,
-                        resizable=True,
-                        width="900px",
-                        body=await self.get_review_form(request, bulk=True),
-                    ),
-                )
-        else:
-            return None
+                return None
+        except Exception as exp:
+            print('Exception at CrReview.get_review_action() %s ' % exp)
+            traceback.print_exc()
 
     async def on_create_pre(
             self,
@@ -957,16 +1010,19 @@ class CrReview(SwiftAdmin):
             item_id: Union[List[str], List[int]],
             **kwargs,
     ) -> Dict[str, Any]:
-        data = await super().on_update_pre(request, obj, item_id)
-        data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
-        if data['tsg_rvew_rslt'].strip() == 'Approved' or data['tsg_rvew_rslt'].strip() == 'Returned' or data['tsg_rvew_rslt'].strip() == 'Completed':
-            addstr = f'{datetime.now().astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M")}: User {request.user.username} reviewed, action: {data["tsg_rvew_rslt"]} '
-            if data['review_history'] is None or len(data['review_history'].strip()) == 0:
-                data['review_history'] = f'{addstr}'
-            else:
-                data['review_history'] = f'{data["review_history"]}\n{addstr}'
-        return data
-
+        try:
+            data = await super().on_update_pre(request, obj, item_id)
+            data['update_time'] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+            if data['tsg_rvew_rslt'].strip() == 'Approved' or data['tsg_rvew_rslt'].strip() == 'Returned' or data['tsg_rvew_rslt'].strip() == 'Completed':
+                addstr = f'{datetime.now().astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M")}: User {request.user.username} reviewed, action: {data["tsg_rvew_rslt"]} '
+                if data['review_history'] is None or len(data['review_history'].strip()) == 0:
+                    data['review_history'] = f'{addstr}'
+                else:
+                    data['review_history'] = f'{data["review_history"]}\n{addstr}'
+            return data
+        except Exception as exp:
+            print('Exception at CrReview.on_update_pre() %s ' % exp)
+            traceback.print_exc()
 
     @property
     def route_create(self) -> Callable:
@@ -1000,6 +1056,8 @@ class CrReview(SwiftAdmin):
                     items = await self.create_items(request, data)
             except Exception as error:
                 await self.db.async_rollback()
+                print('Exception at CrReview.route_create() %s ' % error)
+                traceback.print_exc()
                 return self.error_execute_sql(request=request, error=error)
             result = len(items)
             if result == 1:  # if only one item, return the first item
@@ -1060,6 +1118,8 @@ class CrReview(SwiftAdmin):
                     items = await self.update_items(request, item_id, values)
             except Exception as error:
                 await self.db.async_rollback()
+                print('Exception at CrReview.route_update() %s ' % error)
+                traceback.print_exc()
                 return self.error_execute_sql(request=request, error=error)
             if items[0].tsg_rvew_rslt.strip() == 'Submitted':
                 # Send email to tsg
