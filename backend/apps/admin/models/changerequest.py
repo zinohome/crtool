@@ -148,14 +148,14 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=True,
                                                     index=False,
                                                     sa_column_kwargs={"server_default": func.now()},
-                                                    amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD", maxDate="$end_date"),
+                                                    amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD"),
                                                     amis_table_column = amis.TableColumn(toggled=True))
     end_date: Optional[str] = models.Field(default_factory= datetime.now,
                                                     title='End Date<br>(计划结束时间)',
                                                     nullable=True,
                                                     index=False,
                                                     sa_column_kwargs={"server_default": func.now()},
-                                                    amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD", minDate="$begin_date"),
+                                                    amis_form_item=amis.InputDatetime(disabled=False, format="YYYY-MM-DD", inputFormat="YYYY-MM-DD"),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     cr_activity_brief: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='*CR activity Brief<br>(变更描述)',
