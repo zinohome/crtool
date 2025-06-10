@@ -721,6 +721,7 @@ class ChangerequestAdmin(SwiftAdmin):
                 # fields = model_fields(BaseCrud._create_schema_update()).values()
                 if self.schema_read:
                     extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
+                    log.debug(extra["initApi"])
                 extra["initData"] = {
                     "_override": True,
                     "tsg_rvew_rslt": "Draft",
