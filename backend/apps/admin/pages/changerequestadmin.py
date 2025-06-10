@@ -722,6 +722,7 @@ class ChangerequestAdmin(SwiftAdmin):
                 if self.schema_read:
                     extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
                 extra["initData"] = {
+                    "_override": True,
                     "tsg_rvew_rslt": "Draft",
                     "review_history":""
                 }
