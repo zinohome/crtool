@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import traceback
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 # @Time    : 2025/03/04 10:49
 # @Author  : ZhangJun
 # @FileName: apis.py
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 from fastapi_amis_admin.globals.deps import SyncSess, AsyncSess
 from sqlalchemy import text
 
@@ -43,6 +45,36 @@ async def get_sdm_list(sess: SyncSess):
         traceback.print_exc()
     return sdm_list
 
+@router.get("/crtool/get_duplicate_crdata/item/{item_id}")
+async def get_duplicate_data(
+            sess: SyncSess,
+            item_id: int = Path(..., title="变更请求ID", description="需要查询的变更请求唯一标识", ge=1)
+        ):
+    returnobj = {}
+    returnobj['status'] = 0
+    returnobj['data'] = {}
+    returnobj['msg'] = "success"
+    returnobj['code'] = None
+    try:
+        query = text("""
+                    SELECT * 
+                    FROM changerequest 
+                    WHERE id = :item_id
+                """)
+        result = sess.execute(query, {"item_id": item_id})
+        rows = result.fetchall()
+        # 将Row对象转换为字典列表
+        result_list = [dict(row._asdict()) for row in rows]
+        returnobj["data"] = result_list[0]
+        returnobj["data"].pop("id", None)
+        returnobj["data"]["tsg_rvew_rslt"] = "Draft"
+        returnobj["data"]["review_history"] = ""
+        returnobj["data"]["create_time"] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+        returnobj["data"]["update_time"] = datetime.now().astimezone(ZoneInfo("Asia/Shanghai"))
+    except Exception as exp:
+        print('Exception at apis.get_sdm_list() %s ' % exp)
+        traceback.print_exc()
+    return returnobj
 
 @router.get("/test_async_db", summary="测试异步数据库操作")
 async def test_async_db(sess: AsyncSess):

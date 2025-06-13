@@ -11,6 +11,7 @@ import traceback
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+import requests
 from fastapi._compat import ModelField
 from fastapi_amis_admin.admin import AdminAction
 from fastapi_amis_admin.crud import CrudEnum, BaseApiOut
@@ -22,6 +23,7 @@ from fastapi_user_auth.globals import auth
 from pydantic._internal._decorators import mro
 from sqlalchemy import Select, or_, and_, desc
 from fastapi import Body
+
 from apps.admin.swiftadmin import SwiftAdmin
 from core.globals import site
 from typing import List, Optional, TYPE_CHECKING, Union, Dict, Any, Callable
@@ -720,13 +722,8 @@ class ChangerequestAdmin(SwiftAdmin):
                 fields = model_fields(self.schema_model).values()
                 # fields = model_fields(BaseCrud._create_schema_update()).values()
                 if self.schema_read:
-                    extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
-                    log.debug(extra["initApi"])
-                extra["initData"] = {
-                    "_override": True,
-                    "tsg_rvew_rslt": "Draft",
-                    "review_history":""
-                }
+                    #extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
+                    extra["initApi"] = f"get:/crtool/get_duplicate_crdata/item/${self.pk_name}"
             d_form = Form(
                 api=api,
                 name="create",

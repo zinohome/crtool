@@ -724,7 +724,8 @@ class CrRequest(SwiftAdmin):
                 fields = model_fields(self.schema_model).values()
                 # fields = model_fields(BaseCrud._create_schema_update()).values()
                 if self.schema_read:
-                    extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
+                    #extra["initApi"] = f"get:{self.router_path}/item/${self.pk_name}"
+                    extra["initApi"] = f"get:/crtool/get_duplicate_crdata/item/${self.pk_name}"
             d_form = Form(
                 api=api,
                 name="create",
