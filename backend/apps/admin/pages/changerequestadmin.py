@@ -234,13 +234,15 @@ class ChangerequestAdmin(SwiftAdmin):
         self.schema_read = None
         # 设置form弹出类型  Drawer | Dialog
         self.action_type = 'Drawer'
+
     async def get_select(self, request: Request) -> Select:
         #user = await auth.get_current_user(request)
         #log.debug(user)
         #log.debug(request.user)
         try:
             stmt = await super().get_select(request)
-            return stmt.where(Changerequest.tsg_rvew_rslt != 'Draft').order_by(desc(Changerequest.update_time))
+            #return stmt.where(Changerequest.tsg_rvew_rslt != 'Draft').order_by(desc(Changerequest.update_time))
+            return stmt.where(Changerequest.tsg_rvew_rslt != 'Draft')
         except Exception as exp:
             print('Exception at ChangerequestAdmin.get_select() %s ' % exp)
             traceback.print_exc()

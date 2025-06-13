@@ -246,7 +246,8 @@ class CrRequest(SwiftAdmin):
                     Changerequest.tsg_rvew_rslt != 'Draft'
                 )
             )
-            ).order_by(desc(Changerequest.update_time))
+            )
+            #).order_by(desc(Changerequest.update_time))
         except Exception as exp:
             print('Exception at CrRequest.get_select() %s ' % exp)
             traceback.print_exc()

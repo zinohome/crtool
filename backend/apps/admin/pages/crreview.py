@@ -247,7 +247,8 @@ class CrReview(SwiftAdmin):
                     Changerequest.tsg_rvew_rslt != 'Draft',
                     Changerequest.tsg_rvew_rslt != 'Returned'
                 )
-            ).order_by(desc(Changerequest.update_time))
+            )
+            #).order_by(desc(Changerequest.update_time))
         except Exception as exp:
             print('Exception at CrReview.get_select() %s ' % exp)
             traceback.print_exc()
