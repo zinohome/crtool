@@ -1121,6 +1121,8 @@ class CrRequest(SwiftAdmin):
                                        'category', 'prblm_dscrption']
 
                     errors = {}
+                    if "健康检查" in values.get("category"):
+                        required_fields.append("machine_count")
                     if values['tsg_rvew_rslt'] != "Draft":
                         for k, v in values.items():
                             if k in required_fields and (not v or not v.strip()):

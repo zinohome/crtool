@@ -45,7 +45,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     index=False,
                                                     amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=True))
-    customer_num: str = models.Field(default=None,
+    customer_num: Optional[str] = models.Field(default=None,
                                                     title='*Customer Number<br>(客户号)',
                                                     nullable=True,
                                                     index=False,
@@ -247,7 +247,7 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     amis_form_item=amis.Select(options=appdef.AppVardicts['tsg_rvew_rslt']['value'], labelField='label', valueField='value',disabled=True),
                                                     amis_table_column = amis.TableColumn(toggled=True))
     tsg_onsite: Optional[str] = models.Field(default="TBD",
-                                                    title='TSG On Site Needed',
+                                                    title='*TSG On Site Needed',
                                                     nullable=True,
                                                     index=False,
                                                     amis_form_item=amis.Select(options=appdef.AppVardicts['tsg_onsite']['value'], labelField='label', valueField='value', required=True),
