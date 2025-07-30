@@ -40,7 +40,13 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     customer_name: str = models.Field(default=None,
-                                                    title='*Customer Name/Number<br>(客户名/客户号)',
+                                                    title='*Customer Name<br>(客户名)',
+                                                    nullable=True,
+                                                    index=False,
+                                                    amis_form_item = amis.InputText(required=True),
+                                                    amis_table_column = amis.TableColumn(toggled=True))
+    customer_num: str = models.Field(default=None,
+                                                    title='*Customer Number<br>(客户号)',
                                                     nullable=True,
                                                     index=False,
                                                     amis_form_item = amis.InputText(required=True),
@@ -74,6 +80,12 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     nullable=True,
                                                     index=False,
                                                     amis_form_item = amis.InputText(required=True),
+                                                    amis_table_column = amis.TableColumn(toggled=False))
+    cstm_loc: Optional[str] = models.Field(default=None,
+                                                    title='*Location<br>(客户所属区域)',
+                                                    nullable=True,
+                                                    index=False,
+                                                    amis_form_item = amis.Select(options=appdef.AppVardicts['location']['value'], labelField='label', valueField='value', required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     sngl_pnt_sys: Optional[str] = models.Field(default="N",
                                                     title='*是否单点系统变更',
@@ -137,12 +149,21 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     title='Business Justification<br>附件',
                                                     amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
-    onsite_engineer: Optional[str] = models.Field(default=None,
-                                                    title='*Onsite Engineer<br>(维修SSR名字)',
+    platform: Optional[str] = models.Field(default=None,
+                                                    title='*Platform<br>(所属平台)',
                                                     nullable=True,
                                                     index=False,
-                                                    amis_form_item = amis.Select(options=userselect.SSR, menuTpl='<div>${nickname} [ ${email} ]</div>', labelField='nickname', valueField='id', searchable=True, required=True),
+                                                    amis_form_item = amis.Select(options=appdef.AppVardicts['platform']['value'], labelField='label', valueField='value', required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
+    onsite_engineer: Optional[str] = models.Field(default=None,
+                                                  title='*Onsite Engineer<br>(维修SSR名字)',
+                                                  nullable=True,
+                                                  index=False,
+                                                  amis_form_item=amis.Select(options=userselect.SSR,
+                                                                             menuTpl='<div>${nickname} [ ${email} ]</div>',
+                                                                             labelField='nickname', valueField='id',
+                                                                             searchable=True, required=True),
+                                                  amis_table_column=amis.TableColumn(toggled=False))
     begin_date: Optional[str] = models.Field(default_factory= datetime.now,
                                                     title='Begin Date<br>(维护开始时间)',
                                                     nullable=True,
@@ -170,11 +191,17 @@ class Changerequest(SwiftSQLModel, table=True):
                                                     amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
     machine_info: Optional[str] = models.Field(default=None,
-                                                    title='*Machine Type/ModelSN/Machine Status<br>(机器型号、序列号、服务状态)',
+                                                    title='*Machine Type/Machine Status<br>(机器型号、服务状态)',
                                                     nullable=True,
                                                     index=False,
                                                     amis_form_item = amis.InputText(required=True),
                                                     amis_table_column = amis.TableColumn(toggled=False))
+    machine_sn: Optional[str] = models.Field(default=None,
+                                               title='*ModelSN<br>(序列号)',
+                                               nullable=True,
+                                               index=False,
+                                               amis_form_item=amis.InputText(required=True),
+                                               amis_table_column=amis.TableColumn(toggled=False))
     machine_info_attch: Optional[str] = models.Field(default=None,sa_column=Column(TEXT,nullable=True,index=False),
                                                     title='Machine Type/ModelSN/Machine Status<br>附件',
                                                     amis_form_item=amis.InputFile(receiver="post:/admin/file/upload", accept=".txt, .pdf, .docx, .doc, .xlsx, .xls, .png, .jpg, .jpeg", autoUpload=False, multiple=True),

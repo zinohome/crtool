@@ -91,7 +91,19 @@
       "name": "tsg_onsite",
       "cname": "TSGOnSiteNeeded",
       "type": "List",
-      "value": [{"label": "Yes","value": "Yes"},{"label": "No","value": "No"},{"label": "TBD","value": "TBD"}]
+      "value": [{"label": "Yes","value": "Yes"},{"label": "No","value": "No"}]
+    },
+    {
+      "name": "location",
+      "cname": "Location",
+      "type": "List",
+      "value": [{"label": "NC","value": "NC"},{"label": "SC","value": "SC"}]
+    },
+    {
+      "name": "platform",
+      "cname": "Platform",
+      "type": "List",
+      "value": [{"label": "I-Ser","value": "I-Ser"},{"label": "P-Ser","value": "P-Ser"},{"label": "Z-Ser","value": "Z-Ser"},{"label": "Storage","value": "Storage"}]
     }
   ]
 }

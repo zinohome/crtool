@@ -525,9 +525,9 @@ class ChangerequestAdmin(SwiftAdmin):
                     fieldlist.append(item)
             fld_dict = {item.name: item for item in fieldlist}
             customer_fld_lst = []
-            customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+            customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["customer_num"], fld_dict["case_number"]]))
             customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-            customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+            customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"], fld_dict["cstm_loc"]]))
             customer_fld_lst.append(Divider())
             customer_fld_lst.append(
                 Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
@@ -546,14 +546,15 @@ class ChangerequestAdmin(SwiftAdmin):
             proj_fld_lst.append(Divider())
             projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
             cr_fld_lst = []
-            cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["platform"],fld_dict["onsite_engineer"]]))
             cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
             proj_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
             cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-            cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["machine_sn"]]))
             cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+            cr_fld_lst.append(Group(body=[fld_dict["version"]]))
             cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
             cr_fld_lst.append(Divider())
             cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
@@ -595,9 +596,11 @@ class ChangerequestAdmin(SwiftAdmin):
                     fieldlist.append(item)
                 fld_dict = {item.name: item for item in fieldlist}
                 customer_fld_lst = []
-                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["customer_name"], fld_dict["customer_num"], fld_dict["case_number"]]))
                 customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"], fld_dict["cstm_loc"]]))
                 customer_fld_lst.append(Divider())
                 customer_fld_lst.append(
                     Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
@@ -618,14 +621,15 @@ class ChangerequestAdmin(SwiftAdmin):
                 projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
                 cr_fld_lst = []
                 fld_dict["onsite_engineer"].value = user.username
-                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["platform"],fld_dict["onsite_engineer"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
                 proj_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["machine_sn"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["version"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
                 cr_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
@@ -663,9 +667,11 @@ class ChangerequestAdmin(SwiftAdmin):
                     fieldlist.append(item)
                 fld_dict = {item.name: item for item in fieldlist}
                 customer_fld_lst = []
-                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["customer_name"], fld_dict["customer_num"], fld_dict["case_number"]]))
                 customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"], fld_dict["cstm_loc"]]))
                 customer_fld_lst.append(Divider())
                 customer_fld_lst.append(
                     Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
@@ -684,14 +690,15 @@ class ChangerequestAdmin(SwiftAdmin):
                 proj_fld_lst.append(Divider())
                 projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
                 cr_fld_lst = []
-                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["platform"],fld_dict["onsite_engineer"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
                 proj_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["machine_sn"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["version"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
                 cr_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["category"],fld_dict["machine_count"]]))
@@ -741,9 +748,11 @@ class ChangerequestAdmin(SwiftAdmin):
                     fieldlist.append(item)
                 fld_dict = {item.name: item for item in fieldlist}
                 customer_fld_lst = []
-                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["customer_name"], fld_dict["customer_num"], fld_dict["case_number"]]))
                 customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"], fld_dict["cstm_loc"]]))
                 customer_fld_lst.append(Divider())
                 customer_fld_lst.append(
                     Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
@@ -762,14 +771,15 @@ class ChangerequestAdmin(SwiftAdmin):
                 proj_fld_lst.append(Divider())
                 projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
                 cr_fld_lst = []
-                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["platform"],fld_dict["onsite_engineer"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
                 proj_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["machine_sn"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["version"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
                 cr_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -859,9 +869,11 @@ class ChangerequestAdmin(SwiftAdmin):
                     fieldlist.append(item)
                 fld_dict = {item.name: item for item in fieldlist}
                 customer_fld_lst = []
-                customer_fld_lst.append(Group(body=[fld_dict["customer_name"], fld_dict["case_number"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["customer_name"], fld_dict["customer_num"], fld_dict["case_number"]]))
                 customer_fld_lst.append(Group(body=[fld_dict["cstm_cntct_name"], fld_dict["cstm_cntct_phone"]]))
-                customer_fld_lst.append(Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"]]))
+                customer_fld_lst.append(
+                    Group(body=[fld_dict["cstm_addr"], fld_dict["cstm_location"], fld_dict["cstm_loc"]]))
                 customer_fld_lst.append(Divider())
                 customer_fld_lst.append(
                     Group(body=[fld_dict["sngl_pnt_sys"], fld_dict["urgency"], fld_dict["complexity"]]))
@@ -880,14 +892,15 @@ class ChangerequestAdmin(SwiftAdmin):
                 proj_fld_lst.append(Divider())
                 projtabitem = amis.Tabs.Item(title=_('Project'), icon='fa fa-id-card', className="bg-red-100", body=proj_fld_lst)
                 cr_fld_lst = []
-                cr_fld_lst.append(Group(body=[fld_dict["onsite_engineer"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["platform"],fld_dict["onsite_engineer"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["begin_date"], fld_dict["end_date"]]))
                 proj_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["cr_activity_brief"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["cr_detail_plan_attch"]]))
-                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["version"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["machine_info"], fld_dict["machine_sn"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["machine_info_attch"]]))
+                cr_fld_lst.append(Group(body=[fld_dict["version"]]))
                 cr_fld_lst.append(Group(body=[fld_dict["related_ibm_software"], fld_dict["sw_version"]]))
                 cr_fld_lst.append(Divider())
                 cr_fld_lst.append(Group(body=[fld_dict["category"]]))
@@ -1036,7 +1049,7 @@ class ChangerequestAdmin(SwiftAdmin):
                 if not isinstance(data, list):
                     data = [data]
                 try:
-                    required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys', 'ssr', 'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no', 'busnss_jstfction', 'onsite_engineer','cr_activity_brief', 'machine_info', 'category', 'prblm_dscrption']
+                    required_fields = ['cstm_loc','customer_num','platform','machine_sn','customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys', 'ssr', 'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no', 'busnss_jstfction', 'onsite_engineer','cr_activity_brief', 'machine_info', 'category', 'prblm_dscrption']
                     errors = {}
                     if data[0].tsg_rvew_rslt != "Draft":
                         for k, v in vars(data[0]).items():
@@ -1095,12 +1108,11 @@ class ChangerequestAdmin(SwiftAdmin):
                 if not values:
                     return self.error_data_handle(request)
                 try:
-                    required_fields = ['customer_name', 'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys',
-                                       'ssr',
+                    required_fields = ['cstm_loc', 'customer_num', 'platform', 'machine_sn', 'customer_name',
+                                       'cstm_cntct_name', 'cstm_addr', 'cstm_location', 'sngl_pnt_sys', 'ssr',
                                        'ssr_phone', 'support_tsg_id', 'local_sdm', 'proj_code', 'cntrt_no',
-                                       'busnss_jstfction',
-                                       'onsite_engineer', 'cr_activity_brief', 'machine_info', 'category',
-                                       'prblm_dscrption']
+                                       'busnss_jstfction', 'onsite_engineer', 'cr_activity_brief', 'machine_info',
+                                       'category', 'prblm_dscrption']
                     errors = {}
                     if values['tsg_rvew_rslt'] != "Draft":
                         for k, v in values.items():
